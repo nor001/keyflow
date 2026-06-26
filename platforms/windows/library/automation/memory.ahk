@@ -105,7 +105,7 @@ class MemoryService {
       this._showRuntimeError(
         "KeePass reference found"
         . this._buildContextSuffix(contextLabel)
-        . ", but keepassProviderCommand is not configured in local-secrets.ini or NORMAN_KEEPASS_PROVIDER_CMD."
+        . ", but keepassProviderCommand is not configured in local-secrets.ini."
       )
       return ""
     }
@@ -125,10 +125,6 @@ class MemoryService {
 
     if IsSet(keepassProviderCommand) && keepassProviderCommand
       return keepassProviderCommand
-
-    envCommand := EnvGet("NORMAN_KEEPASS_PROVIDER_CMD")
-    if envCommand
-      return envCommand
 
     try return IniRead(secretsFilePath(), "secrets", "keepassProviderCommand", "")
     catch

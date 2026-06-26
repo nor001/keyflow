@@ -1,0 +1,64 @@
+﻿{
+  "hotkeys": {
+    "!8": {
+      "count": 2,
+      "firstSeenUtc": "20260626194036",
+      "lastSeenUtc": "20260626201910",
+      "sourceFile": "hotkeys\/sap-gui.ahk",
+      "sourceGroup": "sap-gui-session"
+    },
+    "#!right": {
+      "count": 1,
+      "firstSeenUtc": "20260626163132",
+      "lastSeenUtc": "20260626163132",
+      "sourceFile": "hotkeys\/global.ahk",
+      "sourceGroup": "global"
+    },
+    "^+k": {
+      "count": 21,
+      "firstSeenUtc": "20260626194324",
+      "lastSeenUtc": "20260626195808",
+      "sourceFile": "hotkeys\/sap-eclipse.ahk",
+      "sourceGroup": "sap-eclipse"
+    },
+    "^d": {
+      "count": 1,
+      "firstSeenUtc": "20260626202137",
+      "lastSeenUtc": "20260626202137",
+      "sourceFile": "hotkeys\/sap-gui.ahk",
+      "sourceGroup": "sap-gui-session"
+    },
+    "backtick": {
+      "count": 3,
+      "firstSeenUtc": "20260626194142",
+      "lastSeenUtc": "20260626204843",
+      "sourceFile": "hotkeys\/sap-eclipse.ahk",
+      "sourceGroup": "sap-eclipse"
+    },
+    "f5": {
+      "count": 6,
+      "firstSeenUtc": "20260626163737",
+      "lastSeenUtc": "20260626212300",
+      "sourceFile": "hotkeys\/domains.ahk",
+      "sourceGroup": "xyplorer"
+    },
+    "~\\": {
+      "count": 2,
+      "firstSeenUtc": "20260626163556",
+      "lastSeenUtc": "20260626193116",
+      "sourceFile": "hotkeys\/global.ahk",
+      "sourceGroup": "global"
+    },
+    "~^c": {
+      "count": 25,
+      "firstSeenUtc": "20260626163544",
+      "lastSeenUtc": "20260626212802",
+      "sourceFile": "hotkeys\/global.ahk",
+      "sourceGroup": "global"
+    }
+  },
+  "meta": {
+    "updatedAtUtc": "20260626212802",
+    "version": 1
+  }
+}

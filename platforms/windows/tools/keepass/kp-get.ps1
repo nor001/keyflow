@@ -2,10 +2,10 @@ param(
   [Parameter(Mandatory = $true)]
   [string]$Ref,
 
-  [string]$DatabasePath = $env:NORMAN_KEEPASSXC_DB,
-  [string]$CliPath = $env:NORMAN_KEEPASSXC_CLI,
-  [string]$KeyFile = $env:NORMAN_KEEPASSXC_KEY_FILE,
-  [string]$PasswordEnvVar = "NORMAN_KEEPASSXC_DB_PASSWORD",
+  [string]$DatabasePath = $env:KEYFLOW_KEEPASSXC_DB,
+  [string]$CliPath = $env:KEYFLOW_KEEPASSXC_CLI,
+  [string]$KeyFile = $env:KEYFLOW_KEEPASSXC_KEY_FILE,
+  [string]$PasswordEnvVar = "KEYFLOW_KEEPASSXC_DB_PASSWORD",
   [switch]$NoPassword
 )
 
@@ -34,7 +34,7 @@ function Resolve-KeePassCliPath {
     return $programFilesPath
   }
 
-  throw "Could not find keepassxc-cli. Set NORMAN_KEEPASSXC_CLI or pass -CliPath."
+  throw "Could not find keepassxc-cli. Set KEYFLOW_KEEPASSXC_CLI or pass -CliPath."
 }
 
 function Resolve-KpReference {
@@ -112,7 +112,7 @@ function Invoke-KeePassShow {
   )
 
   if (-not $DatabasePath) {
-    throw "DatabasePath is required. Set NORMAN_KEEPASSXC_DB or pass -DatabasePath."
+    throw "DatabasePath is required. Set KEYFLOW_KEEPASSXC_DB or pass -DatabasePath."
   }
 
   if (-not (Test-Path $DatabasePath)) {

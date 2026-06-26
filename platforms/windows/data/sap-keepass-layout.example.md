@@ -2,7 +2,7 @@
 
 This repo no longer expects `sap-credentials.json`.
 
-The local provider command configured in `keepassProviderCommand` or `NORMAN_KEEPASS_PROVIDER_CMD` should resolve `kp:` references and print the requested value to stdout.
+The local provider command configured in `keepassProviderCommand` should resolve `kp:` references and print the requested value to stdout.
 
 `platforms/windows/tools/keepass/kp-get.ps1` resolves refs with this rule:
 

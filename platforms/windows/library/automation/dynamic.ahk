@@ -6,7 +6,6 @@
  * Usage:
  *   services.dynamic.execute("^+a; WinWaitActive,Open ABAP; zpm*", 100)
  *   services.dynamic.execute("^c; ^r", 500)
- *   services.dynamic.execute("%keepassXc%; {enter}; WinWaitActive,Password; !{f4}", 100)
  */
 
 class DynamicService {
@@ -23,10 +22,6 @@ class DynamicService {
   openTeamsSearchAndGoToField() {
     return this.execute("^e; ^g", 200)
   }
-
-  ; unlockKeepassAndClosePrompt() {
-  ;   return this.execute("%keepassXc%; {enter}; WinWaitActive,Password", 100)
-  ; }
 
   refreshAndCloseXyplorerTab() {
     return this.execute("{f5}; ^+{f4}")
@@ -187,7 +182,7 @@ class DynamicService {
   
   /**
   * Resolves memory variables: %varName%
-  * Example: "%keepassXc%" -> value stored in services.memory
+  * Example: "%nttOfficePass%" -> value stored in services.memory
    */
   _resolveMemoryVars(text) {
     local result := text
@@ -232,5 +227,4 @@ class DynamicService {
       ToolTip("DYN ERROR: " errorMsg)
   }
 }
-
 

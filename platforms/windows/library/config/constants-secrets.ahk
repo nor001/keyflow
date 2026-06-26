@@ -1,12 +1,9 @@
-; Local secret loader. Real values belong in data/local-secrets.ini or env vars.
+; Local secret loader. Real values belong in data/local-secrets.ini.
 loadSecretConstants() {
   global
   local secretsFile := secretsFilePath()
-  pathGptNews := secretConfigValue(secretsFile, "pathGptNews", EnvGet("NORMAN_PATH_GPT_NEWS"))
-  nttOfficePass := secretConfigValue(secretsFile, "nttOfficePass", EnvGet("NORMAN_NTT_OFFICE_PASS"))
-  keepassXc := secretConfigValue(secretsFile, "keepassXc", EnvGet("NORMAN_KEEPASS_XC"))
-  keepassProviderCommand := secretConfigValue(secretsFile, "keepassProviderCommand", EnvGet("NORMAN_KEEPASS_PROVIDER_CMD"))
-  breakId := secretConfigValue(secretsFile, "breakId", "BREAK-POINT ID abapcg.")
+  nttOfficePass := secretConfigValue(secretsFile, "nttOfficePass", "")
+  keepassProviderCommand := secretConfigValue(secretsFile, "keepassProviderCommand", "")
 }
 
 secretsFilePath() {

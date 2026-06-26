@@ -19,7 +19,6 @@ global utils := AppUtils()
 #Include automation\run.ahk
 #Include automation\everything.ahk
 #Include automation\launcher.ahk
-#Include automation\paste.ahk
 #Include automation\hotstring.ahk
 #Include automation\dynamic.ahk
 #Include automation\windows.ahk

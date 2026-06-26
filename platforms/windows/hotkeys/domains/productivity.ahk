@@ -1,9 +1,3 @@
-#hotif winactive("ock") or winactive(".kdbx")
-f1::{
-trackDomainsHotkeyUsage("f1", "keepass")
-services.dynamic.unlockKeepassAndClosePrompt()
-}
-
 #hotif winactive(titleSnipaste)
 ~enter::{
 trackDomainsHotkeyUsage("~enter", "snipaste")
@@ -35,4 +29,3 @@ f1::{
 trackDomainsHotkeyUsage("f1", "task-time-tracker")
 services.dynamic.copyAndRefreshAppTime()
 }
-

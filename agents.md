@@ -1,91 +1,72 @@
-﻿# AGENTS.md
+# AGENTS.md
 
-This repository is a private reusable Windows automation workspace built around AutoHotkey v2. Treat it as an operational codebase with local-only configuration, not as a generic public package.
+AutoHotkey v2 Windows automation workspace. Operational codebase, not a public package.
 
-## Naming convention
+## Authority chain
 
-### Rules (ordered by priority)
+When sources conflict, this order wins:
 
-1. **English-first** — all files, classes, services, helpers, groups, and runtime targets use English identifiers.
-2. **`keyflow*` prefix** — new runtime APIs and service names use `keyflow` as the product namespace (e.g. `keyflowInitServices`, `keyflowServiceRegistry`). Do not introduce new `norman*` symbols.
-3. **Intent over history** — names express what a thing _does_, not when it was created or what it replaced.
-4. **External labels stay as-is** — SAP window titles, executable names, KeePass entry paths, and business domain names (e.g. `pluz dev`, `saplogon.exe`) are never translated or renamed.
-5. **`NORMAN_*` env vars are legacy-compatible** — they remain supported as external environment inputs. Preserve the pattern: env-var override first, file fallback second. Do not rename them in code unless the user explicitly requests a migration.
+1. `ai/health-check.summary.json` — current repo state, machine-generated
+2. `ai/repo-map.json` — routing and domain ownership
+3. `AGENTS.md` — this file: naming contract and hard rules
+4. `README.md` — architecture and onboarding
 
-### Vocabulary by layer
+## Mandatory workflow
 
-| Layer | Preferred terms |
+```
+1. read ai/repo-map.json
+2. python ai/health_check.py --pretty --summary          # confirm ok: true
+3. edit smallest responsible file set
+4. python ai/health_check.py --pretty \
+     --output ai/health-check.json \
+     --output-summary ai/health-check.summary.json
+5. if wiring changed: smoke-test AHK (see docs/smoke-test.md)
+```
+
+If step 2 exits 1: fix reported `issues[]` before proceeding.
+
+## Hard rules
+
+- Never touch local-only files unless user explicitly asks: `local-secrets.ini`, `local-paths.ini`, `local-startup.ini`, `memory-vars.ini`, `rom.ini`, `storage.db`.
+- Never introduce new `norman*` identifiers. Existing `NORMAN_*` `EnvGet()` calls are legacy-compatible — leave them.
+- Never merge `sap-session.ahk` into `sap.ahk` or vice versa.
+- Never guess machine paths — use `*.example.*` files as structure reference only.
+- Never depend on Git metadata at runtime.
+- Never reintroduce `paste.ahk` as a registered service without resolving the overlap with `MemoryService.paste()`.
+
+## Naming contract
+
+| Scope | Rule |
 |---|---|
-| Data loading | `session`, `entry`, `provider`, `catalog` |
-| Window matching | `window`, `workspace`, `target` |
-| Activation scope | `profile`, `group`, `context` |
-| Execution | `command`, `run`, `action` |
-| Config | `path`, `secret`, `constant` |
+| Files, classes, services, helpers, groups, targets | English-first |
+| New runtime APIs | `keyflow*` prefix |
+| External labels (SAP titles, exe names, KeePass paths, business names) | Keep as-is, never translate |
+| `NORMAN_*` env vars | Legacy-compatible inputs, documented, not renamed |
 
-### What to avoid
+Preferred vocabulary: `session` `entry` `provider` `catalog` `window` `workspace` `target` `profile` `group` `context` `command` `run` `action` `path` `secret` `constant`
 
-- Do not mix `logon` / `login` / `session` for the same concept.
-- Do not mix `gui` / `window` / `desktop` if they represent the same layer.
-- Do not mix `run` / `open` / `execute` / `start` without a clear criterion.
-- Do not introduce abbreviations that are not already used in the codebase.
+Avoid mixing: `logon/login/session` · `gui/window/desktop` · `run/open/execute/start`
 
-## What this repo is
+## File boundaries
 
-- `platforms/windows/keyflow.ahk` is the main entrypoint.
-- `platforms/windows/library/` contains shared services and bootstrap logic.
-- `platforms/windows/library/automation/sap-session.ahk` owns SAP session resolution and KeePassXC-backed login.
-- `platforms/windows/library/automation/sap.ahk` owns SAP GUI and Eclipse automation on top of session handling.
-- `platforms/windows/hotkeys/` contains user-facing shortcuts grouped by area such as global, SAP, editors, and domain-specific contexts.
-- `platforms/windows/data/` mixes versioned catalogs with local-only runtime files. Be careful here.
-- `platforms/windows/tools/` contains helper executables and startup scripts used by the Windows workflow.
+| Concern | Owner |
+|---|---|
+| SAP session lookup + KeePass login | `sap-session.ahk` |
+| SAP GUI + Eclipse automation | `sap.ahk` |
+| Service wiring + hotstring profiles | `bootstrap.ahk` |
+| Hotkey triggers | `platforms/windows/hotkeys/` |
+| Versioned catalogs | `platforms/windows/data/*.json` |
+| AI tooling + machine-readable contracts | `ai/` |
 
-## Recommended reading order
+## Known dead code
 
-1. `platforms/windows/keyflow.ahk`
-2. `platforms/windows/library/bootstrap.ahk`
-3. `platforms/windows/library/config/constants-core-paths.ahk`
-4. `platforms/windows/library/config/constants-secrets.ahk`
-5. `platforms/windows/hotkeys/global.ahk`
-6. `platforms/windows/hotkeys/sap-gui.ahk`
-7. `platforms/windows/hotkeys/sap-eclipse.ahk`
-8. `platforms/windows/library/automation/sap-session.ahk` for session and credential changes
-9. `platforms/windows/library/automation/sap.ahk` for SAP GUI or Eclipse automation changes
+| Symbol | File | Action |
+|---|---|---|
+| `PasteService` | `automation/paste.ahk` | Not registered, no callers. Remove or integrate `exeEverything` tweak into `MemoryService` first. |
+| `sapQasSnippetsJsonFile` | `constants-core-paths.ahk:16` | Declared, never consumed. Remove when confirmed unused. |
 
-## Sensitive and local-only files
+## Validation
 
-Default rule: prefer examples and schemas over live local files.
-
-Do not rely on or modify these files unless the user explicitly asks:
-
-- `platforms/windows/data/local-secrets.ini`
-- `platforms/windows/data/local-paths.ini`
-- `platforms/windows/data/local-startup.ini`
-- `platforms/windows/data/memory-vars.ini`
-- `platforms/windows/data/rom.ini`
-- `storage.db`
-- `platforms/windows/storage.db`
-
-Use these instead when you need structure:
-
-- `platforms/windows/data/local-secrets.example.ini`
-- `platforms/windows/data/local-paths.example.ini`
-- `platforms/windows/data/local-startup.example.ini`
-- `platforms/windows/data/sap-keepass-layout.example.md`
-
-## Editing rules for agents
-
-- Keep changes scoped and preserve the current AHK v2 style.
-- Do not replace real local values with guessed values.
-- Prefer documenting configuration contracts instead of hardcoding machine-specific paths.
-- When changing data-loading behavior, preserve the current pattern of legacy `NORMAN_*` env var override first, file fallback second.
-- Treat `kp:sap-index/session/pluz dev` style lookups and direct KeePass entry refs like `kp:company/.../pluz prd` as the supported SAP credential convention unless the user asks to redesign it.
-- Keep SAP session concerns in `sap-session.ahk` and SAP GUI or Eclipse automation concerns in `sap.ahk`. Do not merge them again unless the user explicitly asks for it.
-- When the user asks to simplify or restart a subsystem, prefer deleting legacy paths and compatibility code instead of preserving historical behavior.
-- Assume the repo may be copied around without a `.git` directory. Do not depend on Git metadata at runtime.
-
-## Validation guidance
-
-- For documentation-only changes, verify that the docs match the current code layout and config names.
-- For code changes, check the affected include chain from `keyflow.ahk` through `bootstrap.ahk`.
-- If a change touches hotkeys or services, inspect the corresponding JSON or INI contract before changing loader logic.
-- Avoid “testing” by writing to local secret files or runtime databases.
+- Code changes: check include chain from `keyflow.ahk` → `bootstrap.ahk`.
+- Service or hotkey changes: inspect JSON/INI contract first.
+- Never test by writing to local secret files or runtime databases.
