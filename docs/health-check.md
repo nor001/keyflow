@@ -99,6 +99,14 @@ The following globals must be set before any service or hotkey code runs:
 
 **Check**: if you rename a constant, grep all `.ahk` files for the old name before removing it.
 
+## Known dead code (phase-6 audit)
+
+These files are included in `bootstrap.ahk` but have no active callers:
+
+| File | Class | Status |
+|---|---|---|
+| `automation/paste.ahk` | `PasteService` | Included but **not registered** in `keyflowServiceRegistry()` and **not called** by any hotkey or service. Contains an `exeEverything` path-suffix tweak not present in `MemoryService.paste()`. Safe to remove or integrate into `MemoryService` when the tweak is confirmed needed. |
+
 ## What to verify after any rename
 
 1. Run the smoke test (`docs/smoke-test.md` step 1.1) — empty stderr = clean.
