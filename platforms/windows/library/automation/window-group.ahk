@@ -1,4 +1,4 @@
-﻿class WindowsGroupService {
+class WindowGroupService {
   __new() {
     this.wgWin := []
     this.wgId := ""
@@ -27,8 +27,8 @@
     if actives.Length > 0
     {
       targetId := actives[1].id
-      If WinActivate(targetId) = utils.A_Exe
-        send("^{tab}")
+      if WinActivate(targetId) = utils.A_Exe
+        Send("^{tab}")
       else
         WinActivate(targetId)
       utils.A_Id := targetId
@@ -50,7 +50,7 @@
     correl := 0
 
     managers := WinGetList(, , "Program Manager",)
-    For manager in managers
+    for manager in managers
     {
       id := "ahk_id " manager
       try exe := WinGetProcessname(id)
@@ -60,7 +60,7 @@
       title := WinGetTitle(WinExist(id))
 
       if !title or !utils.iswindow(id)
-        Continue
+        continue
 
       matchedPattern := ""
       matchedGroup := ""
@@ -73,11 +73,11 @@
           continue
 
         currentMatch := ""
-        if instr(rulePattern, exe)
+        if InStr(rulePattern, exe)
           currentMatch := matchedPattern := exe
-        else if instr(rulePattern, classLocal)
+        else if InStr(rulePattern, classLocal)
           currentMatch := matchedPattern := classLocal
-        else if instr(title, rulePattern)
+        else if InStr(title, rulePattern)
           currentMatch := matchedPattern := rulePattern
 
         if currentMatch
@@ -86,12 +86,12 @@
       correl += 1
 
       if matchedPattern
-        windows.push(this._windowInfo(exe, classLocal, title, id, matchedGroup, matchedPattern, correl))
+        windows.Push(this._windowInfo(exe, classLocal, title, id, matchedGroup, matchedPattern, correl))
       else if StrLen(lastNumber) > 2
-        windows.push(this._windowInfo(exe, classLocal, title, id, "zzz", exe, correl))
+        windows.Push(this._windowInfo(exe, classLocal, title, id, "zzz", exe, correl))
       else
       {
-        windows.push(this._windowInfo(exe, classLocal, title, id, lastNumber, exe, correl))
+        windows.Push(this._windowInfo(exe, classLocal, title, id, lastNumber, exe, correl))
         if windows.Length = lastNumber
           return
       }
@@ -104,7 +104,7 @@
       name := "zzz"
       for win in windows
       {
-        if instr(win.match, utils.A_Exe) or instr(win.match, utils.A_Class) or instr(utils.A_Title, win.match)
+        if InStr(win.match, utils.A_Exe) or InStr(win.match, utils.A_Class) or InStr(utils.A_Title, win.match)
         {
           name := win.group
           break
@@ -118,7 +118,7 @@
       {
         if win.id = "ahk_id " utils.A_Id
         {
-          windows.push(win)
+          windows.Push(win)
           windows.RemoveAt(i)
         }
         break
@@ -128,12 +128,12 @@
     for win in windows
     {
       if this._isGroupMatch(win, name)
-        actives.push(win)
+        actives.Push(win)
     }
   }
 
   _isGroupMatch(win, name) {
-    return instr(win.group, name) or instr(name, win.match)
+    return InStr(win.group, name) or InStr(name, win.match)
   }
 
   _windowInfo(exe, className, title, id, group, match, index) {
@@ -181,4 +181,3 @@
     this.wgIdlast := ""
   }
 }
-

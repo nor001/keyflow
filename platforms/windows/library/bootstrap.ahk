@@ -15,7 +15,7 @@ loadSecretConstants()
 global utils := AppUtils()
 
 #Include automation\memory.ahk
-#Include automation\hotkey-usage.ahk
+#Include automation\hotkey-tracker.ahk
 #Include automation\run.ahk
 #Include automation\everything.ahk
 #Include automation\launcher.ahk
@@ -23,19 +23,19 @@ global utils := AppUtils()
 #Include automation\hotstring.ahk
 #Include automation\dynamic.ahk
 #Include automation\windows.ahk
-#Include automation\windows-group.ahk
+#Include automation\window-group.ahk
 #Include ui\dark-theme.ahk
-#Include automation\saplogon.ahk
+#Include automation\sap.ahk
 #Include automation\video.ahk
 #Include automation\snipaste.ahk
 #Include automation\whatsapp.ahk
 
-normanServiceRegistry() {
+keyflowServiceRegistry() {
   return {
     dynamic: DynamicService(),
-    saplogon: SapLogonService(),
+    sap: SapService(),
     windows: WindowsService(),
-    windowsGroup: WindowsGroupService(),
+    windowGroup: WindowGroupService(),
     video: VideoService(),
     run: RunService(),
     memory: MemoryService(),
@@ -43,23 +43,23 @@ normanServiceRegistry() {
     snipaste: SnipasteService(),
     whatsapp: WhatsappService(),
     hotstring: HotstringService(),
-    hotkeyUsage: HotkeyUsageService(),
+    hotkeyTracker: HotkeyTrackerService(),
     everything: EverythingService(),
   }
 }
 
-normanHotstringProfiles() {
+keyflowHotstringProfiles() {
   return [
     {label: "autocorrect", group: "", mode: "autocorrect"},
     {label: "quick-snippets", group: "", mode: "autocorrect"},
-    {label: "sap-transaction-shortcuts", group: "group_sap_gui_sessions", mode: "sapTransaction"},
-    {label: "ymt-commands", group: "group_sap_gui_sessions", mode: "ymtCommand"},
+    {label: "sap-transaction-shortcuts", group: "group_sap_runtime_windows", mode: "sapTransaction"},
+    {label: "ymt-commands", group: "group_sap_runtime_windows", mode: "ymtCommand"},
   ]
 }
 
-normanInitServices() {
-  services := normanServiceRegistry()
-  for hotstringProfile in normanHotstringProfiles()
+keyflowInitServices() {
+  services := keyflowServiceRegistry()
+  for hotstringProfile in keyflowHotstringProfiles()
     services.hotstring.set(hotstringProfile)
   return services
 }

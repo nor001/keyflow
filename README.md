@@ -26,7 +26,7 @@ This repository is meant to be reusable across trusted environments, but it is n
 - `platforms/windows/library/config/`
   - Defines core paths, application constants, rules, and secret-loading behavior.
 - `platforms/windows/library/automation/`
-  - Contains service classes for dynamic actions, launchers, windows automation, SAP logon flows, hotstrings, clipboard workflows, and related helpers.
+  - Contains service classes for dynamic actions, launchers, window automation, SAP session flows, hotstrings, clipboard workflows, and related helpers.
 - `platforms/windows/library/ui/`
   - Small UI helpers such as overlays and theme handling.
 
@@ -60,13 +60,20 @@ This repository is meant to be reusable across trusted environments, but it is n
    - local path configuration
    - secret configuration
    - shared service classes
-3. `normanInitServices()` initializes reusable services and registers hotstring profiles.
+3. `keyflowInitServices()` initializes reusable services and registers hotstring profiles.
 4. Hotkey modules under `platforms/windows/hotkeys/` become active.
 5. Runtime data files under `platforms/windows/data/` drive hotstrings, SAP shortcuts, usage tracking, and local environment behavior.
 
 ## Configuration contract
 
 The repo already exposes a stable config contract through example files and environment variables.
+
+Naming conventions used by the codebase:
+
+- `English-first` for files, classes, services, helpers, groups, and runtime targets.
+- `keyflow` is the product-facing project name; new internal APIs should not introduce `norman*`.
+- Real external labels such as SAP window titles or executable names stay unchanged when they must match the host system.
+- Legacy `NORMAN_*` environment variables remain supported as compatibility inputs until a separate migration removes them.
 
 ### Example files
 
@@ -146,7 +153,7 @@ Keep local only:
   - `kp:sap-index/session/pluz qas`
   - `kp:sap-index/session/pluz prd`
 - Each lookup should return a direct entry ref such as `kp:company/nttdata/cliente/pluz prd`.
-- `saplogon.ahk` then reads fields from that entry, for example:
+- `sap-session.ahk` then reads fields from that entry, for example:
   - `kp:company/nttdata/cliente/pluz prd/title`
   - `kp:company/nttdata/cliente/pluz prd/user`
   - `kp:company/nttdata/cliente/pluz prd/pass`

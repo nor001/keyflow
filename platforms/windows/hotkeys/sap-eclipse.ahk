@@ -1,92 +1,91 @@
-; SAP ADT/Eclipse: cableado a services.saplogon.*; implementacion en library/automation/saplogon.ahk.
+; SAP ADT/Eclipse: solo disparadores hacia services.sap.*; la logica vive en library/automation/sap.ahk.
 #hotif winactive(exeECLIPSE)
 !pgdn::{
-trackSapHotkeyUsage("!pgdn", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!pgdn")
 Send("^pgdn")
 }
 !pgup::{
-trackSapHotkeyUsage("!pgup", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!pgup")
 Send("^pgup")
 }
 !+down::{
-trackSapHotkeyUsage("!+down", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!+down")
 Send("^!down")
 }
 ^g::{
-trackSapHotkeyUsage("^g", "sap-eclipse")
+trackSapEclipseHotkeyUsage("^g")
 Send("^1")
 }
 `::{
-trackSapHotkeyUsage("backtick", "sap-eclipse")
-services.saplogon.runEclipseAbapObjectPickerFromHotkey()
+trackSapEclipseHotkeyUsage("backtick")
+services.sap.promptAndOpenAbapObject()
 }
 ; ^`::{
-; trackSapHotkeyUsage("ctrl+backtick", "sap-eclipse")
+; trackSapEclipseHotkeyUsage("ctrl+backtick")
 ; Send("^w")
 ; }
 ^/::{
-trackSapHotkeyUsage("^/", "sap-eclipse")
+trackSapEclipseHotkeyUsage("^/")
 Send("^7")
 }
 ^+k::{
-trackSapHotkeyUsage("^+k", "sap-eclipse")
+trackSapEclipseHotkeyUsage("^+k")
 Send("^d")
 }
 f1::{
-trackSapHotkeyUsage("f1", "sap-eclipse")
-services.saplogon.runEclipseWildcardSearchFromHotkey()
+trackSapEclipseHotkeyUsage("f1")
+services.sap.promptAndSearchAbapObject()
 }
 !f1::{
-trackSapHotkeyUsage("!f1", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!f1")
 Send("^+a")
 }
 f2::{
-trackSapHotkeyUsage("f2", "sap-eclipse")
+trackSapEclipseHotkeyUsage("f2")
 Send("!+r")
 }
 +f2::{
-trackSapHotkeyUsage("+f2", "sap-eclipse")
+trackSapEclipseHotkeyUsage("+f2")
 Send("{f2}")
 }
 !f2::{
-trackSapHotkeyUsage("!f2", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!f2")
 Send("!{f2}")
 }
 ^+f2::{
-trackSapHotkeyUsage("^+f2", "sap-eclipse")
+trackSapEclipseHotkeyUsage("^+f2")
 Send("^+{f2}")
 }
 ^n::{
-trackSapHotkeyUsage("^n", "sap-eclipse")
+trackSapEclipseHotkeyUsage("^n")
 Send("!{f8}")
 }
 ^+b::{
-trackSapHotkeyUsage("^+b", "sap-eclipse")
-services.saplogon.activateEclipseAllCodeArtifacts()
+trackSapEclipseHotkeyUsage("^+b")
+services.sap.focusEclipseWindows()
 }
 ^5::{
-trackSapHotkeyUsage("^5", "sap-eclipse")
-services.saplogon.runEclipseQuickDebugFromHotkey()
+trackSapEclipseHotkeyUsage("^5")
+services.sap.startQuickDebug()
 }
 !j::{
-trackSapHotkeyUsage("!j", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!j")
 Send("{down}")
 }
 !k::{
-trackSapHotkeyUsage("!k", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!k")
 Send("{up}")
 }
 !i::{
-trackSapHotkeyUsage("!i", "sap-eclipse")
+trackSapEclipseHotkeyUsage("!i")
 Send("^!i")
 }
 #hotif winactive("- DATABASE TABLE")
 !up::{
-trackSapHotkeyUsage("!up", "sap-eclipse-database-table")
+trackSapEclipseHotkeyUsage("!up", "sap-eclipse-database-table")
 Send("!{up}")
 }
 !down::{
-trackSapHotkeyUsage("!down", "sap-eclipse-database-table")
+trackSapEclipseHotkeyUsage("!down", "sap-eclipse-database-table")
 Send("!{down}")
 }
-

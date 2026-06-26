@@ -1,82 +1,81 @@
-; SAP GUI: solo disparadores â†’ services.saplogon.* (logica y tcodes en library/automation/saplogon.ahk).
+; SAP GUI: solo disparadores hacia services.sap.*; la logica vive en library/automation/sap.ahk.
 #hotif winactive("Logon for Project")
 f1::{
-trackSapHotkeyUsage("f1", "sap-gui-logon")
-services.saplogon.reloginSapFromLogonProjectWindow()
+trackSapGuiHotkeyUsage("f1", "sap-gui-logon")
+services.sap.reloginFromProjectWindow()
 }
 #hotif winactive("YMT")
-#hotif services.saplogon.isInputBoxActive("ahk_group group_sap_gui_sessions")
+#hotif services.sap.isTextInputActive("ahk_group group_sap_runtime_windows")
 $enter::{
-trackSapHotkeyUsage("$enter", "sap-gui-ymt-input")
-services.saplogon.openSapTcodeFromGuiCommandField()
+trackSapGuiHotkeyUsage("$enter", "sap-gui-ymt-input")
+services.sap.runTcodeFromFocusedInput()
 }
-#hotif winactive("ahk_group group_sap_gui_sessions")
+#hotif winactive("ahk_group group_sap_runtime_windows")
 !left::{
-trackSapHotkeyUsage("!left", "sap-gui-session")
+trackSapGuiHotkeyUsage("!left", "sap-gui-session")
 Send("+{f6}")
 }
 !right::{
-trackSapHotkeyUsage("!right", "sap-gui-session")
+trackSapGuiHotkeyUsage("!right", "sap-gui-session")
 Send("+{f7}")
 }
 !up::{
-trackSapHotkeyUsage("!up", "sap-gui-session")
+trackSapGuiHotkeyUsage("!up", "sap-gui-session")
 Send("^!{up}")
 }
 !down::{
-trackSapHotkeyUsage("!down", "sap-gui-session")
+trackSapGuiHotkeyUsage("!down", "sap-gui-session")
 Send("^!{down}")
 }
 !+down::{
-trackSapHotkeyUsage("!+down", "sap-gui-session")
+trackSapGuiHotkeyUsage("!+down", "sap-gui-session")
 Send("^d")
 }
 ^g::{
-trackSapHotkeyUsage("^g", "sap-gui-session")
+trackSapGuiHotkeyUsage("^g", "sap-gui-session")
 Send("^o")
 }
 ^+w::{
-trackSapHotkeyUsage("^+w", "sap-gui-session")
-services.saplogon.exitSapGuiWithNex()
+trackSapGuiHotkeyUsage("^+w", "sap-gui-session")
+services.sap.exitSession()
 }
 ^+k::{
-trackSapHotkeyUsage("^+k", "sap-gui-session")
+trackSapGuiHotkeyUsage("^+k", "sap-gui-session")
 Send("^+l")
 }
 ; ^`::{
-; trackSapHotkeyUsage("ctrl+backtick", "sap-gui-session")
+; trackSapGuiHotkeyUsage("ctrl+backtick", "sap-gui-session")
 ; Send("^w")
 ; }
 ^d::{
-trackSapHotkeyUsage("^d", "sap-gui-session")
-services.saplogon.toggleSapDebugMode()
+trackSapGuiHotkeyUsage("^d", "sap-gui-session")
+services.sap.toggleDebugMode()
 }
 ^b::{
-trackSapHotkeyUsage("^b", "sap-gui-session")
-services.saplogon.activateSapGuiAllCodeArtifacts()
+trackSapGuiHotkeyUsage("^b", "sap-gui-session")
+services.sap.focusGuiWindows()
 }
 !5::{
-trackSapHotkeyUsage("!5", "sap-gui-session")
-services.saplogon.openSapGuiTcodeEdWorkbenchOptions()
+trackSapGuiHotkeyUsage("!5", "sap-gui-session")
+services.sap.openWorkbenchOptions()
 }
 !6::{
-trackSapHotkeyUsage("!6", "sap-gui-session")
-services.saplogon.openSapGuiTcodeSe16n()
+trackSapGuiHotkeyUsage("!6", "sap-gui-session")
+services.sap.openSe16n()
 }
 !7::{
-trackSapHotkeyUsage("!7", "sap-gui-session")
-services.saplogon.openSapGuiTcodeSe37()
+trackSapGuiHotkeyUsage("!7", "sap-gui-session")
+services.sap.openSe37()
 }
 !8::{
-trackSapHotkeyUsage("!8", "sap-gui-session")
-services.saplogon.openSapGuiTcodeSe38()
+trackSapGuiHotkeyUsage("!8", "sap-gui-session")
+services.sap.openSe38()
 }
 !9::{
-trackSapHotkeyUsage("!9", "sap-gui-session")
-services.saplogon.openSapGuiTcodeSe09()
+trackSapGuiHotkeyUsage("!9", "sap-gui-session")
+services.sap.openSe09()
 }
 !0::{
-trackSapHotkeyUsage("!0", "sap-gui-session")
-services.saplogon.openSapGuiTcodeSe80()
+trackSapGuiHotkeyUsage("!0", "sap-gui-session")
+services.sap.openSe80()
 }
-

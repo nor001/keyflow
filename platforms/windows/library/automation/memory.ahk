@@ -15,7 +15,7 @@ class MemoryService {
       return value
 
     ; Fallback para secretos locales cuando no estan en memory-vars.ini.
-    try value := IniRead(normanSecretsFile(), "secrets", var, "")
+    try value := IniRead(secretsFilePath(), "secrets", var, "")
     catch
       value := ""
     if value != ""
@@ -130,7 +130,7 @@ class MemoryService {
     if envCommand
       return envCommand
 
-    try return IniRead(normanSecretsFile(), "secrets", "keepassProviderCommand", "")
+    try return IniRead(secretsFilePath(), "secrets", "keepassProviderCommand", "")
     catch
       return ""
   }

@@ -1,4 +1,4 @@
-class HotkeyUsageService {
+class HotkeyTrackerService {
   track(hotkeyId, sourceFile := "", sourceGroup := "") {
     if !hotkeyId
       return
@@ -30,11 +30,11 @@ class HotkeyUsageService {
   }
 
   _loadUsageData() {
-    if !FileExist(hotkeyUsageJsonFile)
+    if !FileExist(hotkeyTrackerJsonFile)
       return this._defaultUsageData()
 
     try {
-      jsonText := FileRead(hotkeyUsageJsonFile, "UTF-8")
+      jsonText := FileRead(hotkeyTrackerJsonFile, "UTF-8")
       parsed := JsonService.load(&jsonText)
       return this._normalizeUsageData(parsed)
     } catch {
@@ -44,9 +44,9 @@ class HotkeyUsageService {
 
   _saveUsageData(usageData) {
     jsonText := JsonService.dump(usageData, 2)
-    if FileExist(hotkeyUsageJsonFile)
-      FileDelete(hotkeyUsageJsonFile)
-    FileAppend(jsonText, hotkeyUsageJsonFile, "UTF-8")
+    if FileExist(hotkeyTrackerJsonFile)
+      FileDelete(hotkeyTrackerJsonFile)
+    FileAppend(jsonText, hotkeyTrackerJsonFile, "UTF-8")
   }
 
   _normalizeUsageData(parsed) {

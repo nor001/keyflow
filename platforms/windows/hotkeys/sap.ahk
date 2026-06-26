@@ -2,6 +2,10 @@
 #Include "sap-gui.ahk"
 #Include "sap-eclipse.ahk"
 
-trackSapHotkeyUsage(hotkeyId, sourceGroup := "sap", sourceFile := "hotkeys/sap.ahk") {
-  trackHotkeyUsageScoped(hotkeyId, sourceFile, sourceGroup)
+trackSapGuiHotkeyUsage(hotkeyId, sourceGroup := "sap-gui") {
+  trackHotkeyEvent(hotkeyId, "hotkeys/sap-gui.ahk", sourceGroup)
+}
+
+trackSapEclipseHotkeyUsage(hotkeyId, sourceGroup := "sap-eclipse") {
+  trackHotkeyEvent(hotkeyId, "hotkeys/sap-eclipse.ahk", sourceGroup)
 }

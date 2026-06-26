@@ -3,5 +3,5 @@
 #Include "editors-text.ahk"
 
 trackEditorsHotkeyUsage(hotkeyId, sourceGroup := "editors", sourceFile := "hotkeys/editors.ahk") {
-  trackHotkeyUsageScoped(hotkeyId, sourceFile, sourceGroup)
+  trackHotkeyEvent(hotkeyId, sourceFile, sourceGroup)
 }

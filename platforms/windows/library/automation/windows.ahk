@@ -2,7 +2,7 @@
   closeWindow(closeRules := []) {
     utils.winNow()
 
-    If this._isWindowActiveForGroup(closeRules, "sapCloseFlow")
+    If this._isWindowActiveForGroup(closeRules, "sapWindowClose")
       SetTimer(handleSapCloseCase, 100)
 
     if this._isWindowActiveForGroup(closeRules, "ctrlw")
@@ -106,6 +106,5 @@
   }
 
 }
-
 
 

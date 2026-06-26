@@ -9,13 +9,12 @@ loadProductionConstants(){
 	return loadCoreConstants()
 }
 
-normanResolveDataDir(pathScript) {
+resolveDataDir(pathScript) {
   dataPath := pathScript "\data\"
   if DirExist(dataPath)
     return dataPath
   return dataPath
 }
-
 
 
 

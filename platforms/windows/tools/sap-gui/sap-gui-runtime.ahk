@@ -24,20 +24,19 @@ SetWorkingDir(A_ScriptDir "\..\..")
 #Include "..\..\library\automation\launcher.ahk"
 #Include "..\..\library\automation\memory.ahk"
 #Include "..\..\library\automation\run.ahk"
-#Include "..\..\library\automation\saplogon.ahk"
+#Include "..\..\library\automation\sap.ahk"
 
 global utils := AppUtils()
 loadCoreConstants()
 loadSecretConstants()
-global services := sapguiInitServices()
+global services := sapGuiInitServices()
 
-sapguiInitServices() {
+sapGuiInitServices() {
   return {
     dynamic: DynamicService(),
     launcher: LauncherService(),
     memory: MemoryService(),
     run: RunService(),
-    saplogon: SapLogonService(),
+    sap: SapService(),
   }
 }
-

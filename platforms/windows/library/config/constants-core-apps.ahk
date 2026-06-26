@@ -31,7 +31,7 @@
   exePulse := "ahk_exe Pulse.exe"
   exeQOwnNotes := "ahk_exe QOwnNotes.exe"
   exeRssguard := "ahk_exe rssguard.exe"
-  exeSaplogon := "ahk_exe saplogon.exe"
+  exeSapGuiShell := "ahk_exe saplogon.exe"
   exeLibreOfficeBinary := "ahk_exe soffice.bin"
   exeSublimeText := "ahk_exe sublime_text.exe"
   exeSumatraPDF := "ahk_exe SumatraPDF.exe"
@@ -62,10 +62,10 @@
   classChrome := "ahk_class Chrome_WidgetWin_1"
   classExcel := "ahk_class XLMAIN"
   classExplorer := "ahk_class CabinetWClass"
-  classSaplogon := "ahk_class SAP_FRONTEND_SESSION"
+  classSapGuiSession := "ahk_class SAP_FRONTEND_SESSION"
   classTaskbar := "ahk_class Shell_TrayWnd"
   controlOfficeImage := "RichEdit20W16"
-  titleTaskTimeTracker := normanAppConfigValue(
+  titleTaskTimeTracker := appConfigValue(
     localPathsFile,
     "titleTaskTimeTracker",
     EnvGet("NORMAN_TITLE_TASK_TIME_TRACKER"),
@@ -97,10 +97,8 @@
   titleSoapuiLogon := "Basic Authentication"
 }
 
-normanAppConfigValue(localConfigFile, key, envValue, defaultValue := "") {
+appConfigValue(localConfigFile, key, envValue, defaultValue := "") {
   if envValue
     return envValue
   return IniRead(localConfigFile, "apps", key, defaultValue)
 }
-
-

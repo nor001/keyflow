@@ -6,7 +6,7 @@
     mode := profile.mode
 
     if this._isSapInputMode(mode)
-      HotIf(hk => services.saplogon.isInputBoxActive("ahk_group " groupName))
+      HotIf(hk => services.sap.isTextInputActive("ahk_group " groupName))
     else if (groupName != "")
       HotIfWinActive("ahk_group " groupName)
     else
@@ -15,8 +15,8 @@
     registerEntries(this._loadEntries(label), mode)
     this._resetHotstringContext()
 
-    applySapTcode(hotstringValue, *) => services.saplogon.openTcodeFromInput(hotstringValue)
-    applySapLogon(hotstringValue) => services.saplogon.openSapSession(hotstringValue)
+    applySapTcode(hotstringValue, *) => services.sap.runTcode(hotstringValue)
+    applySapLogon(hotstringValue) => services.sap.openSession(hotstringValue)
 
     registerEntries(entries, mode) {
       for entry in entries {
@@ -154,5 +154,3 @@
   }
 
 }
-
-

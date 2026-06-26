@@ -128,7 +128,7 @@
   }
 }
 
-; Used by SapLogonService GUI helpers (`dynpro := dynpro()` in saplogon.ahk).
+; Used by SapService GUI helpers (`dynpro := dynpro()` in sap.ahk).
 dynpro() {
   return Gui()
 }

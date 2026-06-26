@@ -35,7 +35,7 @@ Optional custom attributes on the same entry:
 - `sapTcode`
 - `languageCode`
 
-If `mandt` is missing, `saplogon.ahk` will try to parse it from the KeePass `URL` field.
+If `mandt` is missing, `sap-session.ahk` will try to parse it from the KeePass `URL` field.
 
 ## Lookup refs
 
