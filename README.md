@@ -101,6 +101,16 @@ Preferred vocabulary by layer:
 
 ### Environment variables currently supported
 
+`platforms/windows/library/config/constants-core-base.ahk`
+
+- `NORMAN_ENV_YMT1`
+- `NORMAN_ENV_YSAP`
+- `NORMAN_SAP_DEFAULT_TCODE_DEV`
+- `NORMAN_SAP_DEFAULT_TCODE_QAS`
+- `NORMAN_SAP_DEFAULT_TCODE_FALLBACK`
+- `NORMAN_SAP_DELAY_POLL_MS`
+- `NORMAN_SAP_DELAY_VPN_WAIT_MS`
+
 `platforms/windows/library/config/constants-core-paths.ahk`
 
 - `NORMAN_PATH_ABAP_GIT_REPO`
@@ -112,12 +122,20 @@ Preferred vocabulary by layer:
 - `NORMAN_FILE_PULSE_GUI`
 - `NORMAN_FILE_NETEXTENDER_GUI`
 
+`platforms/windows/library/config/constants-core-apps.ahk`
+
+- `NORMAN_TITLE_TASK_TIME_TRACKER`
+
 `platforms/windows/library/config/constants-secrets.ahk`
 
 - `NORMAN_PATH_GPT_NEWS`
 - `NORMAN_NTT_OFFICE_PASS`
 - `NORMAN_KEEPASS_XC`
 - `NORMAN_KEEPASS_PROVIDER_CMD`
+
+`platforms/windows/tools/startup/vmware-startup.ahk`
+
+- `NORMAN_VMWARE_DOWNLOADS_PATH`
 
 `platforms/windows/tools/startup/host-startup.ahk`
 
