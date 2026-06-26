@@ -107,6 +107,20 @@ These files are included in `bootstrap.ahk` but have no active callers:
 |---|---|---|
 | `automation/paste.ahk` | `PasteService` | Included but **not registered** in `keyflowServiceRegistry()` and **not called** by any hotkey or service. Contains an `exeEverything` path-suffix tweak not present in `MemoryService.paste()`. Safe to remove or integrate into `MemoryService` when the tweak is confirmed needed. |
 
+## Known dead constants (phase-7 audit)
+
+| Constant | Declared in | Points to | Status |
+|---|---|---|---|
+| `sapQasSnippetsJsonFile` | `constants-core-paths.ahk:16` | `data/qas-snippets.json` | Declared but **never read** by any service or hotkey. File exists and contains SAP QAS ABAP snippets. Candidate for removal once it is confirmed the feature is not planned. |
+
+## Data catalog naming notes
+
+| File | Notes |
+|---|---|
+| `qas-snippets.json` | `qas` = SAP QA system (QAS client). Would be clearer as `sap-qas-snippets.json` to match `sap-transaction-shortcuts.json` naming pattern. Rename only if the loader constant is also activated or removed. |
+| `ymt-commands.json` | `ymt` is an internal SAP transaction domain. Name is acceptable with project context; no rename needed. |
+| All others | Names are self-explanatory within the SAP/AHK domain. |
+
 ## What to verify after any rename
 
 1. Run the smoke test (`docs/smoke-test.md` step 1.1) — empty stderr = clean.
