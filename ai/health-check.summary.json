@@ -45,5 +45,5 @@
     "ai/repo-map.json",
     "ai/health-check.summary.json"
   ],
-  "next_frontier": "Catalog content freshness is the only remaining pending item — requires human domain verification. All structural and code simplification targets complete."
+  "next_frontier": "Execute ai/current-plan.md to add catalog review state, wire it into health_check.py, and make human freshness verification resumable from repo files alone."
 }

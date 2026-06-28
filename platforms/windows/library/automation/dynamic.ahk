@@ -2,45 +2,41 @@
  * DynamicService
  * Executes dynamic action sequences: Send, WinWaitActive, Click, Sleep
  * Supports memory var substitution: %varName%
- * 
- * Usage:
- *   services.dynamic.execute("^+a; WinWaitActive,Open ABAP; zpm*", 100)
- *   services.dynamic.execute("^c; ^r", 500)
  */
 
 class DynamicService {
   debugMode := false  ; Set true to see debug logs for each action
 
   openEditorCommandPaletteWithPercent() {
-    return this.execute("^p; %")
+    return this._runActionChain("^p; %")
   }
 
   openSublimeCommandPaletteByTag() {
-    return this.execute("^p; {#}")
+    return this._runActionChain("^p; {#}")
   }
 
   openTeamsSearchAndGoToField() {
-    return this.execute("^e; ^g", 200)
+    return this._runActionChain("^e; ^g", 200)
   }
 
   refreshAndCloseXyplorerTab() {
-    return this.execute("{f5}; ^+{f4}")
+    return this._runActionChain("{f5}; ^+{f4}")
   }
 
   copyAndRefreshAppTime() {
-    return this.execute("^c; ^r", 500)
+    return this._runActionChain("^c; ^r", 500)
   }
 
   openEdgeReadAloud() {
-    return this.execute("!{q}; {down 2}; {enter}", 1200)
+    return this._runActionChain("!{q}; {down 2}; {enter}", 1200)
   }
 
   clearChatAndSend() {
-    return this.execute("^+{backspace}; {enter};", 2000)
+    return this._runActionChain("^+{backspace}; {enter};", 2000)
   }
 
   fillNttOfficeCredentials() {
-    return this.execute("%nttOfficePass%; tab; %nttOfficePass%; enter")
+    return this._runActionChain("%nttOfficePass%; tab; %nttOfficePass%; enter")
   }
   
   /** 
@@ -48,7 +44,7 @@ class DynamicService {
    * @param actions - action string: "Send1; WWA,title; Send2; SL,1000"
    * @param globalSleep - initial delay before first action (ms)
    */
-  execute(actions, globalSleep := 0) {
+  _runActionChain(actions, globalSleep := 0) {
     if (globalSleep > 0)
       Sleep(globalSleep)
     
@@ -227,4 +223,3 @@ class DynamicService {
       ToolTip("DYN ERROR: " errorMsg)
   }
 }
-

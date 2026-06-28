@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 RE_INCLUDE = re.compile(r'^\s*#Include\s+"?([^"\r\n]+)"?', re.MULTILINE)
+RE_INI_SECTION = re.compile(r"^\s*\[([^\]]+)\]\s*$", re.MULTILINE)
 RE_CLASS_HEADER = re.compile(
     r"^\s*class\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s+extends\s+([A-Za-z_][A-Za-z0-9_]*))?\s*\{",
     re.MULTILINE,
@@ -112,6 +113,10 @@ def parse_hotstring_profiles(bootstrap_text: str) -> list[dict[str, str]]:
     ):
         entries.append({"label": label, "group": group, "mode": mode})
     return entries
+
+
+def parse_ini_sections(text: str) -> list[str]:
+    return RE_INI_SECTION.findall(text)
 
 
 def resolve_include(include_value: str, current_file: Path) -> Path:
@@ -280,6 +285,138 @@ def validate_profiles(
             )
         results.append(entry)
     return results, issues
+
+
+def validate_repo_map_contracts(
+    repo_root: Path,
+    repo_map: dict[str, object],
+    startup_sections: list[str],
+) -> list[dict[str, str]]:
+    issues: list[dict[str, str]] = []
+    expected_guide_files = {
+        "summary": "ai/health-check.summary.json",
+        "map": "ai/repo-map.json",
+        "rules": "AGENTS.md",
+        "architecture": "README.md",
+    }
+    expected_plan_file = "ai/current-plan.md"
+
+    guide_files = repo_map.get("guide-files")
+    if guide_files != expected_guide_files:
+        issues.append(
+            {
+                "type": "repo_map_guide_files_mismatch",
+                "file": "ai/repo-map.json",
+                "message": "guide-files in repo-map.json do not match the standard multi-agent guide contract.",
+            }
+        )
+
+    read_order = repo_map.get("read-order", [])
+    if not isinstance(read_order, list):
+        issues.append(
+            {
+                "type": "repo_map_read_order_invalid",
+                "file": "ai/repo-map.json",
+                "message": "read-order must be a list of repo-relative file paths.",
+            }
+        )
+    else:
+        for rel_path in read_order:
+            if not isinstance(rel_path, str) or not (repo_root / rel_path).exists():
+                issues.append(
+                    {
+                        "type": "repo_map_read_order_missing",
+                        "file": "ai/repo-map.json",
+                        "message": f"read-order references a missing file: {rel_path}",
+                    }
+                )
+
+    plan_location = repo_map.get("plan-location", {})
+    if not isinstance(plan_location, dict):
+        issues.append(
+            {
+                "type": "repo_map_plan_location_invalid",
+                "file": "ai/repo-map.json",
+                "message": "plan-location must be an object.",
+            }
+        )
+    else:
+        detailed_plan = plan_location.get("detailed", "")
+        if detailed_plan != expected_plan_file:
+            issues.append(
+                {
+                    "type": "repo_map_plan_location_mismatch",
+                    "file": "ai/repo-map.json",
+                    "message": "repo-map detailed plan location must point to ai/current-plan.md.",
+                }
+            )
+        elif not (repo_root / detailed_plan).exists():
+            issues.append(
+                {
+                    "type": "repo_map_plan_missing",
+                    "file": "ai/repo-map.json",
+                    "message": "repo-map points to ai/current-plan.md but the file does not exist.",
+                }
+            )
+
+    repo_map_startup_sections = repo_map.get("startup-config-sections", [])
+    if repo_map_startup_sections != startup_sections:
+        issues.append(
+            {
+                "type": "repo_map_startup_sections_mismatch",
+                "file": "ai/repo-map.json",
+                "message": "startup-config-sections in repo-map.json do not match local-startup.example.ini.",
+            }
+        )
+
+    return issues
+
+
+def validate_guide_contracts(repo_root: Path, repo_map: dict[str, object]) -> list[dict[str, str]]:
+    issues: list[dict[str, str]] = []
+    agents_text = read_text(repo_root / "AGENTS.md")
+    readme_text = read_text(repo_root / "README.md")
+
+    if "ai/current-plan.md" not in agents_text:
+        issues.append(
+            {
+                "type": "agents_plan_reference_missing",
+                "file": "AGENTS.md",
+                "message": "AGENTS.md must mention ai/current-plan.md when that detailed plan contract is supported.",
+            }
+        )
+
+    if "guide authority" not in agents_text.lower():
+        issues.append(
+            {
+                "type": "agents_guide_authority_missing",
+                "file": "AGENTS.md",
+                "message": "AGENTS.md must declare guide authority for multi-agent handoff.",
+            }
+        )
+
+    if "ai operating guide" not in readme_text.lower() and "read first" not in readme_text.lower():
+        issues.append(
+            {
+                "type": "readme_operating_guide_missing",
+                "file": "README.md",
+                "message": "README.md must expose a short read-first operating guide section.",
+            }
+        )
+
+    guide_files = repo_map.get("guide-files", {})
+    if isinstance(guide_files, dict):
+        for rel_path in guide_files.values():
+            if isinstance(rel_path, str) and not (repo_root / rel_path).exists():
+                issues.append(
+                    {
+                        "type": "guide_file_missing",
+                        "file": "ai/repo-map.json",
+                        "message": f"guide-files references a missing file: {rel_path}",
+                    }
+                )
+
+    return issues
 
 
 def build_service_contracts(
@@ -550,6 +687,7 @@ def build_summary(
     registry_issues: list,
     service_call_issues: list,
     profile_issues: list,
+    guide_contract_issues: list,
     dead_candidates: dict,
     profile_results: list,
     registry: dict,
@@ -558,7 +696,7 @@ def build_summary(
     unclosed_hotif: list,
     next_frontier: str = "",
 ) -> dict[str, object]:
-    issues = include_missing + registry_issues + service_call_issues + profile_issues + unclosed_hotif + forbidden_references
+    issues = include_missing + registry_issues + service_call_issues + profile_issues + guide_contract_issues + unclosed_hotif + forbidden_references
     profile_counts = {p["label"]: p.get("item_count", 0) for p in profile_results}
     ai_readiness = compute_ai_readiness(issues, dead_candidates, forbidden_references)
     return {
@@ -583,8 +721,11 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
     hotkeys_dir = repo_root / "platforms/windows/hotkeys"
     data_dir = repo_root / "platforms/windows/data"
     bootstrap_text = read_text(bootstrap_file)
+    startup_example_text = read_text(data_dir / "local-startup.example.ini")
+    startup_sections = parse_ini_sections(startup_example_text)
 
     next_frontier = ""
+    repo_map: dict[str, object] = {}
     if repo_map_file.exists():
         try:
             repo_map = json.loads(repo_map_file.read_text(encoding="utf-8-sig"))
@@ -604,6 +745,8 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
     unused_assignments = scan_assignment_candidates(repo_root, token_counter)
     unused_groups = scan_group_candidates(repo_root, token_counter)
     forbidden_references = scan_forbidden_references(repo_root)
+    repo_map_contract_issues = validate_repo_map_contracts(repo_root, repo_map, startup_sections) if repo_map else []
+    guide_contract_issues = validate_guide_contracts(repo_root, repo_map) if repo_map else []
     hotkey_counts = scan_hotkey_counts(hotkeys_dir, repo_root)
     unclosed_hotif = scan_unclosed_hotif(hotkeys_dir, repo_root)
 
@@ -612,6 +755,7 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
         registry_issues,
         service_call_issues,
         profile_issues,
+        repo_map_contract_issues + guide_contract_issues,
         dead_candidates,
         profile_results,
         registry,
@@ -628,6 +772,7 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
             "registry": registry_issues,
             "service_calls": service_call_issues,
             "profiles": profile_issues,
+            "guide_contracts": repo_map_contract_issues + guide_contract_issues,
             "unclosed_hotif": unclosed_hotif,
             "forbidden_references": forbidden_references,
         },

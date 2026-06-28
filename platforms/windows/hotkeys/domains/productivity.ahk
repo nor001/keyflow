@@ -7,15 +7,15 @@ services.snipaste.copyPaste("",snipasteTargets)
 #hotif winactive("ahk_group group_launcher")
 f12::{
 trackDomainsHotkeyUsage("f12", "launcher")
-services.launcher.paste()
+services.launcher.pasteSelectedFiles()
 }
 ^s::{
 trackDomainsHotkeyUsage("^s", "launcher")
-services.launcher.save()
+services.launcher.saveClipboardToSelectedFile()
 }
 !p::{
 trackDomainsHotkeyUsage("!p", "launcher")
-services.launcher.playSelectedMedia()
+services.launcher.openSelectedMedia()
 }
 
 #hotif winactive(exeXyplorer)

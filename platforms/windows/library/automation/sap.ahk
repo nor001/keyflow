@@ -1,6 +1,10 @@
 #Include sap-session.ahk
 
-class SapService extends SapSessionService {
+class SapService {
+  __New() {
+    this.session := SapSessionService(ObjBindMethod(this, "_afterSapLaunch"))
+  }
+
   _afterSapLaunch(sessionConfig) {
     if !(sessionConfig is Map)
       return
@@ -43,7 +47,7 @@ class SapService extends SapSessionService {
   }
 
   reopenSessionFromProjectWindow() {
-    this._reopenSessionFromWindowContext()
+    this.session.reopenSessionFromProjectWindow()
   }
 
   isTextInputActive(winTitle := "A") {
@@ -75,7 +79,7 @@ class SapService extends SapSessionService {
 
     if WinActive(exeEclipse)
     {
-      this.openNamedSession(normalizedTcode)
+      this.session.openNamedSession(normalizedTcode)
       return
     }
 
@@ -183,6 +187,22 @@ class SapService extends SapSessionService {
 
   startQuickDebug() {
     this._runQuickDebug()
+  }
+
+  openPluzDevSession() {
+    this.session.openPluzDevSession()
+  }
+
+  openPluzQasSession() {
+    this.session.openPluzQasSession()
+  }
+
+  openPluzPrdSession() {
+    this.session.openPluzPrdSession()
+  }
+
+  openNamedSession(inputValue) {
+    this.session.openNamedSession(inputValue)
   }
 
   _runTcodePostAction(normalizedTcode) {

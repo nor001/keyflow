@@ -46,13 +46,14 @@
       "ai/repo-map.json",
       "ai/health-check.summary.json"
     ],
-    "next_frontier": "Catalog content freshness is the only remaining pending item — requires human domain verification. All structural and code simplification targets complete."
+    "next_frontier": "Execute ai/current-plan.md to add catalog review state, wire it into health_check.py, and make human freshness verification resumable from repo files alone."
   },
   "issues": {
     "include_missing": [],
     "registry": [],
     "service_calls": [],
     "profiles": [],
+    "guide_contracts": [],
     "unclosed_hotif": [],
     "forbidden_references": []
   },
@@ -344,7 +345,6 @@
         "referenced_methods": [
           "clearChatAndSend",
           "copyAndRefreshAppTime",
-          "execute",
           "fillNttOfficeCredentials",
           "openEdgeReadAloud",
           "openEditorCommandPaletteWithPercent",
@@ -361,7 +361,7 @@
           "openEdgeReadAloud",
           "clearChatAndSend",
           "fillNttOfficeCredentials",
-          "execute",
+          "_runActionChain",
           "_executeAction",
           "_parseActionParts",
           "_handleWWA",
@@ -428,17 +428,17 @@
         "class": "LauncherService",
         "class_file": "platforms/windows/library/automation/launcher.ahk",
         "referenced_methods": [
-          "closeAndWait",
-          "paste",
-          "playSelectedMedia",
-          "save"
+          "dismissLauncherUi",
+          "openSelectedMedia",
+          "pasteSelectedFiles",
+          "saveClipboardToSelectedFile"
         ],
         "declared_methods": [
           "_isMediaPath",
-          "closeAndWait",
-          "playSelectedMedia",
-          "paste",
-          "save",
+          "dismissLauncherUi",
+          "openSelectedMedia",
+          "pasteSelectedFiles",
+          "saveClipboardToSelectedFile",
           "_readSelectedFiles",
           "_readSelectedFile",
           "_isPasteableTextFile",
@@ -521,6 +521,7 @@
           "toggleDebugMode"
         ],
         "declared_methods": [
+          "__New",
           "_afterSapLaunch",
           "insertCommentLine",
           "insertCommentBlock",
@@ -552,35 +553,17 @@
           "promptAndSearchAbapObject",
           "_runQuickDebug",
           "startQuickDebug",
+          "openPluzDevSession",
+          "openPluzQasSession",
+          "openPluzPrdSession",
+          "openNamedSession",
           "_runTcodePostAction",
           "_normalizeTcodeForSap",
           "_submitTcodeButton",
           "_resolveOperationDelayMs",
           "_syncYmtProgramFromLocal",
           "_readActiveInputValue",
-          "_promptValue",
-          "openPluzDevSession",
-          "openPluzQasSession",
-          "openPluzPrdSession",
-          "openNamedSession",
-          "_openPinnedSession",
-          "_resolveSessionConfig",
-          "_normalizeSessionLookup",
-          "_validateSessionConfig",
-          "_reopenSessionFromWindowContext",
-          "_buildLaunchCommand",
-          "_runLaunchCommand",
-          "_tryHandleCredentialWindows",
-          "_handleMultipleSessionPopup",
-          "_fillCredentials",
-          "_resolveSessionEntryRef",
-          "_normalizeSessionEntryRef",
-          "_loadSessionRecordFromKeepass",
-          "_resolveSessionField",
-          "_resolveSessionFieldOrFallback",
-          "_parseSessionEntryUrl",
-          "_mapGet",
-          "_showRuntimeError"
+          "_promptValue"
         ]
       },
       {
@@ -642,13 +625,14 @@
           "__new",
           "activateGroup",
           "_activate",
-          "_jobGroupKey",
+          "_watchAltRelease",
           "_collectWindows",
           "_groupActive",
           "_isGroupMatch",
           "_windowInfo",
           "_ruleGroup",
           "_rulePattern",
+          "_captureCurrentWindowContext",
           "_resetGroupState"
         ]
       },
@@ -759,9 +743,9 @@
         "calls": [
           "dynamic.copyAndRefreshAppTime",
           "dynamic.refreshAndCloseXyplorerTab",
-          "launcher.paste",
-          "launcher.playSelectedMedia",
-          "launcher.save",
+          "launcher.openSelectedMedia",
+          "launcher.pasteSelectedFiles",
+          "launcher.saveClipboardToSelectedFile",
           "snipaste.copyPaste"
         ]
       },
@@ -840,7 +824,6 @@
       {
         "file": "platforms/windows/library/automation/dynamic.ahk",
         "calls": [
-          "dynamic.execute",
           "memory.getValue"
         ]
       },
@@ -868,14 +851,14 @@
       {
         "file": "platforms/windows/library/automation/run.ahk",
         "calls": [
-          "launcher.closeAndWait",
+          "launcher.dismissLauncherUi",
           "memory.resolveTargetTitle"
         ]
       },
       {
         "file": "platforms/windows/library/automation/sap-session.ahk",
         "calls": [
-          "launcher.closeAndWait",
+          "launcher.dismissLauncherUi",
           "memory.getValue",
           "memory.resolveProviderValue",
           "memory.resolveSecretValue"

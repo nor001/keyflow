@@ -1,9 +1,6 @@
 class WindowGroupService {
   __new() {
-    this.wgWin := []
-    this.wgId := ""
-    this.wgIdlast := ""
-    this.wgKey := ""
+    this.cachedWindows := []
     this.currentId := ""
     this.currentTitle := ""
     this.currentClass := ""
@@ -11,21 +8,14 @@ class WindowGroupService {
   }
 
   activateGroup(rules := [], name := "") {
-    this.currentId    := (WinExist("A") ? WinGetID("A") : "")
-    this.currentTitle := (this.currentId ? (t := WinGetTitle("A"), t ? t : WinGetClass("A")) : "")
-    this.currentClass := (this.currentId ? WinGetClass("A") : "")
-    this.currentExe   := (this.currentId ? WinGetProcessname("A") : "")
-    this.wgKey := A_Thishotkey
-    if !this.wgId
-      this.wgId := this.currentId
-    this.wgIdlast := this.currentId
+    this._captureCurrentWindowContext()
 
-    windows := this.wgWin
-    if this.wgWin.Length = 0
+    windows := this.cachedWindows
+    if this.cachedWindows.Length = 0
       this._collectWindows(rules, &windows, name)
-    this.wgWin := windows
+    this.cachedWindows := windows
     this._activate(&windows, name)
-    this.wgWin := windows
+    this.cachedWindows := windows
   }
 
   _activate(&windows, name) {
@@ -43,8 +33,8 @@ class WindowGroupService {
     else
       utilTooltip("Windows not open: " StrUpper(name))
 
-    SetTimer(_jobGroupKey, 10)
-    _jobGroupKey() {
+    SetTimer(_watchAltRelease, 10)
+    _watchAltRelease() {
       if !GetKeyState("Alt")
       {
         this._resetGroupState()
@@ -181,11 +171,15 @@ class WindowGroupService {
     return ""
   }
 
+  _captureCurrentWindowContext() {
+    this.currentId := (WinExist("A") ? WinGetID("A") : "")
+    this.currentTitle := (this.currentId ? (t := WinGetTitle("A"), t ? t : WinGetClass("A")) : "")
+    this.currentClass := (this.currentId ? WinGetClass("A") : "")
+    this.currentExe := (this.currentId ? WinGetProcessname("A") : "")
+  }
+
   _resetGroupState() {
-    this.wgKey := ""
-    this.wgWin := []
-    this.wgId := ""
-    this.wgIdlast := ""
+    this.cachedWindows := []
     this.currentId := ""
     this.currentTitle := ""
     this.currentClass := ""

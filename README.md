@@ -2,14 +2,9 @@
 
 Private Windows automation workspace built on AutoHotkey v2. This repo is optimized for fast AI maintenance, not for public packaging.
 
-## Read first
+## AI operating guide
 
-For operational work, read in this order:
-
-1. `ai/health-check.summary.json`
-2. `ai/repo-map.json`
-3. `AGENTS.md`
-4. `README.md`
+For operational maintenance, use `ai/health-check.summary.json`, `ai/repo-map.json`, and `AGENTS.md` before changing runtime files.
 
 ## Architecture
 
@@ -39,8 +34,8 @@ Main service surface:
 
 - SAP secrets and session metadata come from KeePassXC through `keepassProviderCommand`.
 - Session names are business-first: `pluz dev`, `pluz qas`, `pluz prd`.
-- `platforms/windows/library/automation/sap-session.ahk` owns session lookup, entry resolution, launch command assembly, and credential filling.
-- `platforms/windows/library/automation/sap.ahk` owns SAP GUI and Eclipse automation over an existing session.
+- `platforms/windows/library/automation/sap-session.ahk` owns session lookup, entry resolution, launch command assembly, credential filling, and relaunch from project-window context.
+- `platforms/windows/library/automation/sap.ahk` is the public `services.sap` facade for SAP GUI and Eclipse automation plus delegated session entrypoints.
 
 KeePass lookup flow:
 
@@ -88,5 +83,5 @@ The preferred startup contract lives in `local-startup.ini`:
 
 - One intentional global remains: `services` in `platforms/windows/keyflow.ahk`.
 - The `utils` global object is gone; utility behavior lives in free `util*()` functions.
-- `constants-core.ahk` is the consolidated constants file.
-- Human-only pending item: catalog content freshness for `sap-transaction-catalog` and `autocorrect`.
+- Launcher and window-group flows now use clearer intent-first names instead of legacy helper wording.
+- Catalog content freshness is still pending human verification; the next cycle formalizes that review as explicit AI-first repo state.

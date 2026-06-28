@@ -1,4 +1,8 @@
 class SapSessionService {
+  __New(afterLaunchHandler := "") {
+    this._afterLaunchHandler := afterLaunchHandler
+  }
+
   openPluzDevSession() {
     this._openPinnedSession("pluz dev")
   }
@@ -12,7 +16,7 @@ class SapSessionService {
   }
 
   openNamedSession(inputValue) {
-    services.launcher.closeAndWait()
+    services.launcher.dismissLauncherUi()
     inputValue := services.memory.getValue(inputValue)
     inputValue := utilKeyClear(inputValue)
     utilTooltip(inputValue)
@@ -64,7 +68,7 @@ class SapSessionService {
     return ""
   }
 
-  _reopenSessionFromWindowContext() {
+  reopenSessionFromProjectWindow() {
     Send("1")
     Sleep(10)
     text := ControlGetText("Edit4")
@@ -262,5 +266,7 @@ class SapSessionService {
   }
 
   _afterSapLaunch(sessionConfig) {
+    if this._afterLaunchHandler
+      this._afterLaunchHandler.Call(sessionConfig)
   }
 }

@@ -1,0 +1,173 @@
+{
+  "version": 6,
+  "purpose": "Navigation map for rapid multi-agent maintenance of keyflow.",
+  "guide-files": {
+    "summary": "ai/health-check.summary.json",
+    "map": "ai/repo-map.json",
+    "rules": "AGENTS.md",
+    "architecture": "README.md"
+  },
+  "read-order": [
+    "ai/health-check.summary.json",
+    "ai/repo-map.json",
+    "AGENTS.md",
+    "README.md",
+    "platforms/windows/keyflow.ahk",
+    "platforms/windows/library/bootstrap.ahk",
+    "platforms/windows/library/automation/sap-session.ahk",
+    "platforms/windows/library/automation/sap.ahk"
+  ],
+  "plan-location": {
+    "default": "AGENTS.md -> Next evolution frontier",
+    "detailed": "ai/current-plan.md",
+    "rule": "Use at most one persistent detailed plan file at a time. Do not create root-level plan files."
+  },
+  "entrypoints": [
+    {
+      "id": "runtime",
+      "path": "platforms/windows/keyflow.ahk",
+      "role": "Main AutoHotkey entrypoint."
+    },
+    {
+      "id": "bootstrap",
+      "path": "platforms/windows/library/bootstrap.ahk",
+      "role": "Loads constants, free util functions, services, and hotstring profiles."
+    },
+    {
+      "id": "startup-host",
+      "path": "platforms/windows/tools/startup/host-startup.ahk",
+      "role": "Optional host launcher."
+    },
+    {
+      "id": "startup-vmware",
+      "path": "platforms/windows/tools/startup/vmware-startup.ahk",
+      "role": "Optional VMware launcher."
+    },
+    {
+      "id": "health-check",
+      "path": "ai/health_check.py",
+      "role": "Validation guard and machine-readable state generator."
+    }
+  ],
+  "domains": [
+    {
+      "id": "sap-session",
+      "path": "platforms/windows/library/automation/sap-session.ahk",
+      "owns": [
+        "KeePass-backed SAP session lookup",
+        "entry field resolution",
+        "session launch command assembly",
+        "credential window filling",
+        "session relaunch from project-window context"
+      ]
+    },
+    {
+      "id": "sap-automation",
+      "path": "platforms/windows/library/automation/sap.ahk",
+      "owns": [
+        "public services.sap facade",
+        "SAP GUI automation",
+        "Eclipse ABAP helpers",
+        "tcode execution",
+        "code-save and quick debug helpers"
+      ]
+    },
+    {
+      "id": "runtime-services",
+      "path": "platforms/windows/library/automation/",
+      "owns": [
+        "13 registered services exposed as services.*"
+      ]
+    },
+    {
+      "id": "util",
+      "path": "platforms/windows/library/util.ahk",
+      "owns": [
+        "free utility functions only"
+      ]
+    },
+    {
+      "id": "hotkeys",
+      "path": "platforms/windows/hotkeys/",
+      "owns": [
+        "tracking infrastructure",
+        "global triggers",
+        "SAP GUI triggers",
+        "SAP Eclipse triggers",
+        "editor triggers",
+        "domain triggers",
+        "standalone layout script"
+      ]
+    },
+    {
+      "id": "catalogs",
+      "path": "platforms/windows/data/",
+      "owns": [
+        "versioned catalogs",
+        "example config contracts"
+      ]
+    },
+    {
+      "id": "startup",
+      "path": "platforms/windows/tools/startup/",
+      "owns": [
+        "secondary launchers for host and VMware contexts"
+      ]
+    },
+    {
+      "id": "ai-tooling",
+      "path": "ai/",
+      "owns": [
+        "health_check.py",
+        "health-check.summary.json",
+        "health-check.json",
+        "repo-map.json",
+        "current-plan.md",
+        "agent-prompts.md"
+      ]
+    }
+  ],
+  "runtime-api": [
+    "dynamic",
+    "everything",
+    "hotkeyTracker",
+    "hotstring",
+    "launcher",
+    "memory",
+    "run",
+    "sap",
+    "snipaste",
+    "video",
+    "whatsapp",
+    "windowGroup",
+    "windows"
+  ],
+  "sap-session-entrypoints": [
+    "services.sap.openPluzDevSession()",
+    "services.sap.openPluzQasSession()",
+    "services.sap.openPluzPrdSession()",
+    "services.sap.openNamedSession(sessionName)"
+  ],
+  "startup-config-sections": [
+    "runtime-env",
+    "sap-defaults",
+    "sap-delays",
+    "ui",
+    "startup-host",
+    "startup-vmware"
+  ],
+  "local-only-files": [
+    "platforms/windows/data/local-secrets.ini",
+    "platforms/windows/data/local-paths.ini",
+    "platforms/windows/data/local-startup.ini",
+    "platforms/windows/data/memory-vars.ini",
+    "platforms/windows/data/rom.ini",
+    "storage.db",
+    "platforms/windows/storage.db"
+  ],
+  "standalone": [
+    "platforms/windows/hotkeys/layouts/colemak-dh.ahk"
+  ],
+  "current-focus": "Stable multi-agent guide layer with simplified runtime APIs and a completed runtime-simplification pass. The next focus is turning catalog freshness review into explicit machine-visible repo state.",
+  "next-frontier": "Execute ai/current-plan.md to add catalog review state, wire it into health_check.py, and make human freshness verification resumable from repo files alone."
+}

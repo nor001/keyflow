@@ -42,7 +42,7 @@
 
   _prepareHotkeyLaunch() {
     if instr(A_Thishotkey, "b0:")
-      services.launcher.closeAndWait()
+      services.launcher.dismissLauncherUi()
   }
 
   _firstAppItem(appCandidates) {

@@ -30,6 +30,7 @@ Roles are fixed:
 5. Run `python ai/health_check.py --pretty --output ai/health-check.json --output-summary ai/health-check.summary.json`.
 6. If runtime wiring changed, smoke-test with `platforms/windows/tools/exe/AutoHotkey64.exe /ErrorStdOut=CP65001 platforms/windows/keyflow.ahk`.
 7. Close the cycle by updating the guide layer if routing, behavior, constraints, or next frontier changed.
+8. In the final handoff, state which actions are still human-only and whether a new technical plan should be created now or deferred.
 
 If step 2 or 5 returns `ok: false`, fix the reported issues before doing anything else.
 
@@ -55,6 +56,9 @@ Guide discipline:
 Handoff rule:
 
 - Leave the repo so another agent can resume safely from code plus guide files only.
+- If technical execution is complete, say so explicitly and separate human-only pending work from technical pending work.
+- If a next technical frontier is already clear, replace `ai/current-plan.md` with the new plan in the same cycle.
+- If only human-only work remains, do not invent a new technical plan just to fill the file; say that plan creation is deferred until a real technical frontier appears.
 
 ## Plan policy
 
@@ -64,6 +68,7 @@ Use only one persistent plan location at a time.
 - If a detailed multi-step plan must survive across turns or agents, store it in `ai/current-plan.md`.
 - Do not create root-level `plan*.md`, `next.md`, or duplicate plan files.
 - When the plan is completed or superseded, fold the outcome back into `AGENTS.md` and delete or fully replace `ai/current-plan.md`.
+- A completed plan must leave behind two things: a short human-action list in `AGENTS.md` and a clear decision about whether the next technical plan is ready now or deferred.
 
 ## Hard rules
 
@@ -93,7 +98,7 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 | Concern | Owner |
 |---|---|
 | SAP session resolution + KeePass provider | `platforms/windows/library/automation/sap-session.ahk` |
-| SAP GUI + ADT automation | `platforms/windows/library/automation/sap.ahk` |
+| SAP public facade + GUI/ADT automation | `platforms/windows/library/automation/sap.ahk` |
 | Service wiring + hotstring profiles | `platforms/windows/library/bootstrap.ahk` |
 | Free utility functions | `platforms/windows/library/util.ahk` |
 | Hotkey tracking infrastructure | `platforms/windows/hotkeys/hotkey-tracking.ahk` |
@@ -106,15 +111,17 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 
 - `ai_readiness` is currently `100/100`.
 - One intentional global remains: `services` in `platforms/windows/keyflow.ahk`.
-- The `utils` global object is gone; utility behavior lives in free `util*()` functions.
-- `constants-core.ahk` is the consolidated runtime constants file.
-- Startup contract includes `[runtime-env]`, `[sap-defaults]`, `[sap-delays]`, `[ui]`, `[startup-host]`, and `[startup-vmware]`.
+- The guide layer is now leaner by role: policy in `AGENTS.md`, architecture in `README.md`, routing in `ai/repo-map.json`, objective state in `ai/health-check.summary.json`.
+- SAP ownership is now explicit by composition: `SapService` delegates session/login concerns to `SapSessionService` instead of inheriting them.
+- `DynamicService` now exposes intent-first actions only; the raw action-chain runner is internal.
+- `LauncherService` and `WindowGroupService` now use clearer intent/state naming; historical internal state fields were removed.
 - Catalog counts are stable; content freshness still requires human verification.
+- A detailed multi-agent plan is currently active at `ai/current-plan.md`.
 
 ## Next evolution frontier
 
-- Human-only frontier: verify catalog content freshness for `sap-transaction-catalog` and `autocorrect`.
-- If a new technical frontier appears, replace this section with one focused current target.
+- Execute the new `ai/current-plan.md`: formalize catalog review state so human freshness verification becomes explicit and machine-visible.
+- Human action still matters, but the next technical step is to create the review contract before doing the human verification itself.
 
 ## Validation
 

@@ -5,7 +5,7 @@
     return InStr(filename, "music") or InStr(filename, "audio") or InStr(filename, "video")
   }
 
-  closeAndWait(shortWait := true) {
+  dismissLauncherUi(shortWait := true) {
     If winactive(exeEverything)
     {
       Sleep(50)
@@ -18,22 +18,22 @@
     Sleep(shortWait ? 10 : 500)
   }
 
-  playSelectedMedia() {
+  openSelectedMedia() {
     filename := utilClipboardRead("^+c", 0.3)
 
     if this._isMediaPath(filename)
     {
-      this.closeAndWait()
+      this.dismissLauncherUi()
       services.everything.incrementRunCount(filename)
       services.run.runCommand("aimpportable " filename)
     }
   }
 
-  paste() {
+  pasteSelectedFiles() {
     files := this._readSelectedFiles()
     pastedAny := false
 
-    this.closeAndWait()
+    this.dismissLauncherUi()
 
     Loop Parse, files, "`n", "`r"
     {
@@ -53,11 +53,11 @@
     utilTooltip("Pasted", pastedAny ? "ok" : "no valid file")
   }
 
-  save() {
+  saveClipboardToSelectedFile() {
     codes := A_Clipboard
     selectedFile := this._readSelectedFile()
 
-    this.closeAndWait()
+    this.dismissLauncherUi()
 
     If codes and selectedFile
     {
