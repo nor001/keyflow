@@ -47,7 +47,6 @@ keyflowHotstringProfiles() {
     {label: "quick-snippets", group: "", mode: "autocorrect"},
     {label: "sap-transaction-shortcuts", group: "group_sap_runtime_windows", mode: "sapTransaction"},
     {label: "sap-transaction-catalog", group: "group_sap_runtime_windows", mode: "sapTransaction"},
-    {label: "abap-snippets", group: "group_sap_runtime_windows", mode: "autocorrect"},
     {label: "ymt-commands", group: "group_sap_runtime_windows", mode: "ymtCommand"},
   ]
 }
