@@ -35,7 +35,7 @@ class HotkeyTrackerService {
 
     try {
       jsonText := FileRead(hotkeyTrackerJsonFile, "UTF-8")
-      parsed := JsonService.load(&jsonText)
+      parsed := jsonLoad(&jsonText)
       return this._normalizeUsageData(parsed)
     } catch {
       return this._defaultUsageData()
@@ -43,7 +43,7 @@ class HotkeyTrackerService {
   }
 
   _saveUsageData(usageData) {
-    jsonText := JsonService.dump(usageData, 2)
+    jsonText := jsonDump(usageData, 2)
     if FileExist(hotkeyTrackerJsonFile)
       FileDelete(hotkeyTrackerJsonFile)
     FileAppend(jsonText, hotkeyTrackerJsonFile, "UTF-8")

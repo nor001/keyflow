@@ -2,28 +2,33 @@
 
 Private Windows automation workspace built on AutoHotkey v2. This repo is optimized for fast AI maintenance, not for public packaging.
 
-## AI operating guide
+## Read first
 
-Read in this order:
+For operational work, read in this order:
 
 1. `ai/health-check.summary.json`
 2. `ai/repo-map.json`
 3. `AGENTS.md`
 4. `README.md`
 
-Those files are the only operational guide layer. If code changes materially, they must be updated in the same cycle.
-
-## Runtime shape
+## Architecture
 
 ```text
 platforms/windows/keyflow.ahk
   library/bootstrap.ahk
-    library/automation/
-    library/config/
+    library/config/constants-core.ahk
+    library/config/constants-secrets.ahk
+    library/automation/ (13 services)
+  hotkeys/hotkey-tracking.ahk
   hotkeys/global.ahk
-  hotkeys/sap.ahk
-  hotkeys/editors.ahk
-  hotkeys/domains.ahk
+  hotkeys/sap-gui.ahk
+  hotkeys/sap-eclipse.ahk
+  hotkeys/editors-ide.ahk
+  hotkeys/editors-office.ahk
+  hotkeys/editors-text.ahk
+  hotkeys/domains/comms.ahk
+  hotkeys/domains/media-web.ahk
+  hotkeys/domains/productivity.ahk
 ```
 
 Main service surface:
@@ -60,7 +65,7 @@ Local-only files that must never be committed:
 
 ## Startup scripts
 
-`platforms/windows/tools/startup/host-startup.ahk` and `vmware-startup.ahk` are secondary launchers. They are not the source of truth for runtime behavior; they only prepare a machine context and then launch `platforms/windows/keyflow.ahk`.
+`platforms/windows/tools/startup/host-startup.ahk` and `vmware-startup.ahk` are secondary launchers. They prepare a local machine context and then launch `platforms/windows/keyflow.ahk`.
 
 The preferred startup contract lives in `local-startup.ini`:
 
@@ -79,9 +84,9 @@ The preferred startup contract lives in `local-startup.ini`:
 4. Run `python ai/health_check.py --pretty --summary`.
 5. Launch `platforms/windows/keyflow.ahk`.
 
-## Current evolution status
+## Current model
 
-- The repo is in aggressive simplification mode.
-- Retired naming and retired guide paths are treated as regressions.
-- The AI operating guide must be refreshed after every important execution cycle.
-- Next frontier: continue deleting dormant public surface and optional helpers that no longer accelerate change.
+- One intentional global remains: `services` in `platforms/windows/keyflow.ahk`.
+- The `utils` global object is gone; utility behavior lives in free `util*()` functions.
+- `constants-core.ahk` is the consolidated constants file.
+- Human-only pending item: catalog content freshness for `sap-transaction-catalog` and `autocorrect`.

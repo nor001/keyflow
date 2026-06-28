@@ -1,6 +1,6 @@
 ﻿class VideoService {
   control() {
-    utils.winNow()
+    prevId := WinExist("A")
 
     key := "{" A_Thishotkey "}"
 
@@ -18,7 +18,7 @@
       Sleep(100)
       Send("{space}")
       Sleep(100)
-      WinActivate("ahk_id " utils.A_Id)
+      WinActivate("ahk_id " prevId)
     }
     else
       Send(key)
@@ -32,6 +32,3 @@
     }
   }
 }
-
-
-

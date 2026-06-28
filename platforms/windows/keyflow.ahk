@@ -2,13 +2,13 @@
 FileEncoding("UTF-8")
 #Include library\bootstrap.ahk
 global services := keyflowInitServices()
-;global windowBorderOverlay := new WindowBorderOverlay(activeWindowIdProvider, uiBorderThickness, uiBorderColor)
-;SetTimer(windowBorderOverlay, 100)
+#Include hotkeys\hotkey-tracking.ahk
 #Include hotkeys\global.ahk
-#Include hotkeys\sap.ahk
-#Include hotkeys\editors.ahk
-#Include hotkeys\domains.ahk
-
-activeWindowIdProvider(*) {
-  return WinExist("A")
-}
+#Include hotkeys\sap-gui.ahk
+#Include hotkeys\sap-eclipse.ahk
+#Include hotkeys\editors-ide.ahk
+#Include hotkeys\editors-office.ahk
+#Include hotkeys\editors-text.ahk
+#Include hotkeys\domains\comms.ahk
+#Include hotkeys\domains\media-web.ahk
+#Include hotkeys\domains\productivity.ahk

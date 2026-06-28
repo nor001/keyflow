@@ -1,7 +1,12 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 
-; Minimal runtime for tools/sap-gui: avoids loading main script hotkeys and startup.
+; Minimal runtime for tools/sap-gui — intentionally does NOT use bootstrap.ahk.
+; bootstrap.ahk initialises all 13 services (including windowGroup, video, snipaste,
+; whatsapp, hotstring, hotkeyTracker, everything) and loads hotstring profiles.
+; This tool only needs: dynamic, launcher, memory, run, sap.
+; If a new service is added to bootstrap.ahk it does NOT need to be mirrored here
+; unless this tool explicitly requires it.
 SetTitleMatchMode(2)
 SetWinDelay(-1)
 FileEncoding("UTF-8")
@@ -10,13 +15,6 @@ SetWorkingDir(A_ScriptDir "\..\..")
 
 #Include "..\..\library\json-service.ahk"
 #Include "..\..\library\util.ahk"
-#Include "..\..\library\ui\dark-theme.ahk"
-#Include "..\..\library\ui\window-border-overlay.ahk"
-
-#Include "..\..\library\config\constants-core-base.ahk"
-#Include "..\..\library\config\constants-core-paths.ahk"
-#Include "..\..\library\config\constants-core-apps.ahk"
-#Include "..\..\library\config\constants-core-rules.ahk"
 #Include "..\..\library\config\constants-core.ahk"
 #Include "..\..\library\config\constants-secrets.ahk"
 
@@ -26,7 +24,6 @@ SetWorkingDir(A_ScriptDir "\..\..")
 #Include "..\..\library\automation\run.ahk"
 #Include "..\..\library\automation\sap.ahk"
 
-global utils := AppUtils()
 loadCoreConstants()
 loadSecretConstants()
 global services := sapGuiInitServices()

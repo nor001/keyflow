@@ -14,8 +14,8 @@ class SapSessionService {
   openNamedSession(inputValue) {
     services.launcher.closeAndWait()
     inputValue := services.memory.getValue(inputValue)
-    inputValue := utils.keyClear(inputValue)
-    utils.tooltip(inputValue)
+    inputValue := utilKeyClear(inputValue)
+    utilTooltip(inputValue)
 
     sessionConfig := this._resolveSessionConfig(inputValue)
     validationError := this._validateSessionConfig(sessionConfig, inputValue)
@@ -32,7 +32,7 @@ class SapSessionService {
     this._handleMultipleSessionPopup(sessionConfig["sendEnter"])
     this._afterSapLaunch(sessionConfig)
 
-    if utils.isExit()
+    if utilIsExit()
       Exit()
   }
 
@@ -65,8 +65,6 @@ class SapSessionService {
   }
 
   _reopenSessionFromWindowContext() {
-    utils.winNow()
-
     Send("1")
     Sleep(10)
     text := ControlGetText("Edit4")
@@ -119,7 +117,7 @@ class SapSessionService {
     if WinActive("Logon for Project")
     {
       Send("^a")
-      utils.paste(pass, True)
+      utilPaste(pass, True)
       Send("{enter}")
       return true
     }
@@ -127,11 +125,11 @@ class SapSessionService {
     if WinActive("New ABAP Project")
     {
       Send("^a")
-      utils.paste(mandt, True)
+      utilPaste(mandt, True)
       Send("{tab}^a")
-      utils.paste(user, True)
+      utilPaste(user, True)
       Send("{tab}^a")
-      utils.paste(pass, True)
+      utilPaste(pass, True)
       Send("{tab}^a")
       Send("ES")
       Send("{enter}")
@@ -166,12 +164,12 @@ class SapSessionService {
   _fillCredentials(mandt, user, pass) {
     if mandt {
       Send("+{tab}")
-      utils.paste(mandt, True)
+      utilPaste(mandt, True)
       Send("{tab}")
     }
-    utils.paste(user, True)
+    utilPaste(user, True)
     Send("{tab}")
-    utils.paste(pass, True)
+    utilPaste(pass, True)
     Send("{enter}")
   }
 

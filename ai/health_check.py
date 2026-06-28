@@ -51,7 +51,6 @@ FORBIDDEN_SCAN_EXACT_PATHS = {
     "ai/health-check.json",
     "ai/health-check.summary.json",
     "ai/health_check.py",
-    "plan3.md",
     "platforms/windows/data/local-secrets.ini",
     "platforms/windows/data/local-paths.ini",
     "platforms/windows/data/local-startup.ini",
@@ -65,7 +64,7 @@ FORBIDDEN_SCAN_EXACT_PATHS = {
 KNOWN_DEAD_CLASSES = {"PasteService"}
 
 # Constants that are declared but have no known consumers.
-# hotkeyTrackerJsonFile: used indirectly by HotkeyTrackerService via the global assigned in constants-core-paths.ahk.
+# hotkeyTrackerJsonFile: used indirectly by HotkeyTrackerService via the global assigned in constants-core.ahk.
 KNOWN_DEAD_CONSTANTS: tuple[str, ...] = ()
 
 
@@ -422,9 +421,7 @@ def detect_dead_candidates(
 def scan_assignment_candidates(repo_root: Path, token_counter: Counter[str]) -> list[dict[str, str]]:
     candidates = []
     for rel_path in (
-        "platforms/windows/library/config/constants-core-base.ahk",
-        "platforms/windows/library/config/constants-core-paths.ahk",
-        "platforms/windows/library/config/constants-core-apps.ahk",
+        "platforms/windows/library/config/constants-core.ahk",
         "platforms/windows/library/config/constants-secrets.ahk",
     ):
         path = repo_root / rel_path
@@ -441,7 +438,7 @@ def scan_assignment_candidates(repo_root: Path, token_counter: Counter[str]) -> 
 
 
 def scan_group_candidates(repo_root: Path, token_counter: Counter[str]) -> list[dict[str, str]]:
-    rules_path = repo_root / "platforms/windows/library/config/constants-core-rules.ahk"
+    rules_path = repo_root / "platforms/windows/library/config/constants-core.ahk"
     text = read_text(rules_path)
     candidates = []
     for group_name in sorted(set(RE_GROUP_ADD.findall(text))):
@@ -533,6 +530,21 @@ def scan_forbidden_references(repo_root: Path) -> list[dict[str, object]]:
     return findings
 
 
+def compute_ai_readiness(
+    issues: list,
+    dead_candidates: dict,
+    forbidden_references: list,
+) -> int:
+    """AI-first maintenance readiness score (0–100). 100 = fully clean.
+    Deductions: -10 per unresolved issue, -5 per dead class candidate,
+    -5 per forbidden reference. Cannot go below 0."""
+    score = 100
+    score -= len(issues) * 10
+    score -= len(dead_candidates.get("dead_class_candidates", [])) * 5
+    score -= len(forbidden_references) * 5
+    return max(0, score)
+
+
 def build_summary(
     include_missing: list,
     registry_issues: list,
@@ -544,12 +556,15 @@ def build_summary(
     forbidden_references: list,
     hotkey_counts: dict,
     unclosed_hotif: list,
+    next_frontier: str = "",
 ) -> dict[str, object]:
     issues = include_missing + registry_issues + service_call_issues + profile_issues + unclosed_hotif + forbidden_references
     profile_counts = {p["label"]: p.get("item_count", 0) for p in profile_results}
+    ai_readiness = compute_ai_readiness(issues, dead_candidates, forbidden_references)
     return {
         "ok": len(issues) == 0,
         "issue_count": len(issues),
+        "ai_readiness": ai_readiness,
         "services": sorted(registry.keys()),
         "profiles": profile_counts,
         "hotkey_counts": hotkey_counts,
@@ -557,16 +572,25 @@ def build_summary(
         "dead_constant_candidates": [c["constant"] for c in dead_candidates["dead_constant_candidates"]],
         "forbidden_reference_count": len(forbidden_references),
         "ai_operating_guide": ["AGENTS.md", "README.md", "ai/repo-map.json", "ai/health-check.summary.json"],
-        "next_frontier": "Continue shrinking dormant runtime surface and optional UI helpers after each validated rename.",
+        "next_frontier": next_frontier,
     }
 
 
 def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
     keyflow_entry = repo_root / "platforms/windows/keyflow.ahk"
     bootstrap_file = repo_root / "platforms/windows/library/bootstrap.ahk"
+    repo_map_file = repo_root / "ai/repo-map.json"
     hotkeys_dir = repo_root / "platforms/windows/hotkeys"
     data_dir = repo_root / "platforms/windows/data"
     bootstrap_text = read_text(bootstrap_file)
+
+    next_frontier = ""
+    if repo_map_file.exists():
+        try:
+            repo_map = json.loads(repo_map_file.read_text(encoding="utf-8-sig"))
+            next_frontier = repo_map.get("next-frontier", "")
+        except (json.JSONDecodeError, KeyError):
+            pass
 
     include_graph, include_missing = build_include_graph(keyflow_entry, repo_root)
     file_index, token_counter = parse_file_index(repo_root)
@@ -594,6 +618,7 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
         forbidden_references,
         hotkey_counts,
         unclosed_hotif,
+        next_frontier,
     )
 
     full = {

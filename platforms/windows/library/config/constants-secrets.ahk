@@ -17,6 +17,3 @@ secretConfigValue(secretsFile, key, defaultValue := "") {
   return IniRead(secretsFile, "secrets", key, defaultValue)
 }
 
-loadTestModeConstants() {
-  return loadSecretConstants()
-}

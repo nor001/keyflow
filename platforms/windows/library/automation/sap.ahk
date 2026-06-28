@@ -17,11 +17,11 @@ class SapService extends SapSessionService {
   }
 
   _insertCommentLine() {
-    utils.paste(this._buildCodeCommentLine())
+    utilPaste(this._buildCodeCommentLine())
   }
 
   _insertCommentBlock() {
-    utils.paste(this._buildCommentMarkup())
+    utilPaste(this._buildCommentMarkup())
   }
 
   _buildCodeSignature() {
@@ -146,7 +146,7 @@ class SapService extends SapSessionService {
 
     Send("^+a")
     Sleep(this._resolveOperationDelayMs())
-    utils.paste(objectName, true)
+    utilPaste(objectName, true)
     Send("{enter}")
   }
 
@@ -164,7 +164,7 @@ class SapService extends SapSessionService {
 
     Send("^h")
     Sleep(this._resolveOperationDelayMs())
-    utils.paste(searchText, true)
+    utilPaste(searchText, true)
     Send("{enter}")
   }
 
@@ -207,7 +207,7 @@ class SapService extends SapSessionService {
   _submitTcodeButton(tcode) {
     Send("^a")
     commandText := InStr(tcode, "/") = 1 ? tcode : "/n" tcode
-    utils.paste(commandText, true)
+    utilPaste(commandText, true)
     Send("{enter}")
   }
 

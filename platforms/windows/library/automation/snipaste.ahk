@@ -1,14 +1,14 @@
 ﻿class SnipasteService {
   __new() {
-    this.A_Exe := ""
+    this.ctrlCSourceExe := ""
   }
 
   ctrlC(){
-    try this.A_Exe := WinGetProcessname("A")
+    try this.ctrlCSourceExe := WinGetProcessname("A")
   }
 
   copyPaste(key, snipasteTargets := []) {
-    this.A_Exe := ""
+    this.ctrlCSourceExe := ""
     A_Clipboard := ""
     Sleep(100)
     if key
@@ -22,12 +22,13 @@
       Exit()
 
     sleep(100)
-    utils.winNowMouse()
+    MouseGetPos(, , &_mid)
+    mouseExe := WinGetProcessname("ahk_id " _mid)
     id := this._lastEditorActive(snipasteTargets)
     title := exe := ""
     try exe := WinGetProcessName(id)
     try title := wingettitle(id)
-    If instr(exe, utils.A_Exe) or !title
+    If instr(exe, mouseExe) or !title
       Exit()
 
     WinActivate(title)
@@ -40,7 +41,7 @@
         if instr(target[1], "magick")
         {
           services.run.runCommand("magick clipboard: -resize 80% clipboard:")
-          utils.tooltip("magick clipboard 80%")
+          utilTooltip("magick clipboard 80%")
           sleep 600
         }
         if instr(target[1], "paste")
@@ -51,21 +52,21 @@
       }
     }
 
-    If utils.isExit()
+    If utilIsExit()
       Exit()
   }
 
   pasteResizeOffice(size := "80", paste := "") {
     IF paste
       Send("^v")
-    If this._hasImageInClipboard() AND this.A_Exe != "EXCEL.EXE"
+    If this._hasImageInClipboard() AND this.ctrlCSourceExe != "EXCEL.EXE"
     {
       Sleep(500)
       Send("+{left}")
       this.resizeOffice(size)
     }
 
-    this.A_Exe := ""
+    this.ctrlCSourceExe := ""
   }
 
   resizeOffice(size) {
@@ -90,7 +91,7 @@
       id := "ahk_id " manager
       exe := "ahk_exe " WinGetProcessname(id)
       title := WinGetTitle(id)
-      If !title or !utils.iswindow(id)
+      If !title or !utilIsWindow(id)
         continue
       for target in snipasteTargets
       {
@@ -104,5 +105,3 @@
     return DllCall("IsClipboardFormatAvailable", "Uint", 2)
   }
 }
-
-

@@ -28,11 +28,10 @@
   }
 
   _winSizes(&x, &y, &w, &h, &right, &monH) {
-    utils.winNow()
     CoordMode("Mouse")
     WinGetPos(&x, &y, &w, &h, "A")
     Sleep(100)
-    utils.getMonitor(&right, &monH)
+    utilGetMonitor(&right, &monH)
   }
 
   _taskbarHeight() {

@@ -1,44 +1,69 @@
 # AGENTS.md
 
-AutoHotkey v2 Windows automation workspace. Operational repo, optimized for AI maintenance.
+AutoHotkey v2 Windows automation workspace. Operational repo, optimized for AI maintenance by multiple agents.
 
-## AI operating guide
+## Guide authority
 
-This repo is governed by:
+Use this order when files disagree:
 
 1. `ai/health-check.summary.json`
 2. `ai/repo-map.json`
 3. `AGENTS.md`
 4. `README.md`
 
-If those files disagree, the earlier item wins.
+Roles are fixed:
+
+- `ai/health-check.summary.json`: objective current state
+- `ai/repo-map.json`: navigation and ownership map
+- `AGENTS.md`: workflow, rules, handoff, plan policy
+- `README.md`: architecture and onboarding
 
 ## Mandatory workflow
 
 1. Read `ai/repo-map.json`.
 2. Run `python ai/health_check.py --pretty --summary`.
-3. Edit the smallest responsible file set.
-4. Run `python ai/health_check.py --pretty --output ai/health-check.json --output-summary ai/health-check.summary.json`.
-5. If runtime wiring changed, smoke-test with `platforms/windows/tools/exe/AutoHotkey64.exe /ErrorStdOut=CP65001 platforms/windows/keyflow.ahk`.
-6. **Close the cycle by updating the AI operating guide** — see *Guide update rule* below.
+3. Reconcile any status claim against:
+   - `platforms/windows/keyflow.ahk`
+   - `platforms/windows/library/bootstrap.ahk`
+   - `ai/health-check.summary.json`
+4. Edit the smallest responsible file set.
+5. Run `python ai/health_check.py --pretty --output ai/health-check.json --output-summary ai/health-check.summary.json`.
+6. If runtime wiring changed, smoke-test with `platforms/windows/tools/exe/AutoHotkey64.exe /ErrorStdOut=CP65001 platforms/windows/keyflow.ahk`.
+7. Close the cycle by updating the guide layer if routing, behavior, constraints, or next frontier changed.
 
-If step 2 or 4 returns `ok: false`, fix the reported issues before doing anything else.
+If step 2 or 5 returns `ok: false`, fix the reported issues before doing anything else.
 
-## Guide update rule
+## Multi-agent rules
 
-The cycle is not closed until the guide reflects the current state. This is mandatory, not optional.
+This repo is shared by multiple AIs. Write for the next agent, not for your own memory.
 
-After every execution cycle that removes, renames, or rewires anything:
+Claim discipline:
 
-| Artifact | What to write |
-|---|---|
-| `ai/health-check.summary.json` | Regenerate with `health_check.py`. Source of objective truth. |
-| `ai/repo-map.json` | Remove entries for deleted paths. Update `current-focus` and `next-frontier`. Never leave dead routes. |
-| `AGENTS.md` → *Current evolution status* | **Replace**, do not append. Write what is true now: what completed, what no longer applies, what is next. |
-| `README.md` → *Current evolution status* | Same: replace, not append. Remove mentions of completed frontiers. |
-| `next.md` | One paragraph: next frontier and current state. Overwrite the previous content. Not a log. |
+- Do not write narrative claims from memory alone.
+- If a global exists, say it exists.
+- If a helper exists but is optional, say it is optional.
+- If an example config section exists, the guide must acknowledge it.
+- If something cannot be verified from the repo, label it as human verification.
 
-**Replacement rule:** these sections shrink or stay flat, they do not grow. History that no longer serves the next AI reader belongs in the git log or gets discarded. If a section is growing, the update was done wrong.
+Guide discipline:
+
+- Replace stale status text; do not append history.
+- If one guide file changes meaningfully, review the others in the same cycle.
+- Keep policy in `AGENTS.md`, not in `README.md` or `repo-map.json`.
+- Keep routing in `ai/repo-map.json`, not in `README.md`.
+
+Handoff rule:
+
+- Leave the repo so another agent can resume safely from code plus guide files only.
+
+## Plan policy
+
+Use only one persistent plan location at a time.
+
+- Default: keep the active frontier in `AGENTS.md` under `Next evolution frontier`.
+- If a detailed multi-step plan must survive across turns or agents, store it in `ai/current-plan.md`.
+- Do not create root-level `plan*.md`, `next.md`, or duplicate plan files.
+- When the plan is completed or superseded, fold the outcome back into `AGENTS.md` and delete or fully replace `ai/current-plan.md`.
 
 ## Hard rules
 
@@ -48,7 +73,7 @@ After every execution cycle that removes, renames, or rewires anything:
 - Never guess machine paths; use `*.example.*` only as shape references.
 - Never depend on Git metadata at runtime.
 - Never reintroduce a separate paste service without first proving it adds value over the existing launcher flow.
-- Never leave dead paths in `repo-map.json` after deleting a file or directory.
+- Never leave dead routes in `ai/repo-map.json`.
 
 ## Naming contract
 
@@ -70,18 +95,26 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 | SAP session resolution + KeePass provider | `platforms/windows/library/automation/sap-session.ahk` |
 | SAP GUI + ADT automation | `platforms/windows/library/automation/sap.ahk` |
 | Service wiring + hotstring profiles | `platforms/windows/library/bootstrap.ahk` |
+| Free utility functions | `platforms/windows/library/util.ahk` |
+| Hotkey tracking infrastructure | `platforms/windows/hotkeys/hotkey-tracking.ahk` |
 | Hotkey triggers | `platforms/windows/hotkeys/` |
 | Startup launchers | `platforms/windows/tools/startup/` |
 | Versioned catalogs | `platforms/windows/data/*.json` |
 | AI tooling and navigation | `ai/` |
 
-## Current evolution status
+## Current model
 
-- Runtime entrypoint is stable and health-check driven.
-- SAP session wiring is business-name-first and KeePass-first.
-- Startup scripts are secondary launchers, not the source of truth for runtime behavior.
-- Aggressive simplification is active: deleting dormant UI helpers, collapsing thin aggregator files, removing wrapper classes with no added value, and shrinking the constants surface.
-- Next frontier: execute `evolution-plan.md` starting at Frente 1 (dead UI helpers), then Frente 2 (hotkey aggregators).
+- `ai_readiness` is currently `100/100`.
+- One intentional global remains: `services` in `platforms/windows/keyflow.ahk`.
+- The `utils` global object is gone; utility behavior lives in free `util*()` functions.
+- `constants-core.ahk` is the consolidated runtime constants file.
+- Startup contract includes `[runtime-env]`, `[sap-defaults]`, `[sap-delays]`, `[ui]`, `[startup-host]`, and `[startup-vmware]`.
+- Catalog counts are stable; content freshness still requires human verification.
+
+## Next evolution frontier
+
+- Human-only frontier: verify catalog content freshness for `sap-transaction-catalog` and `autocorrect`.
+- If a new technical frontier appears, replace this section with one focused current target.
 
 ## Validation
 

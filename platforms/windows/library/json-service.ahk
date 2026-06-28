@@ -1,42 +1,6 @@
-﻿;;;; AHK v2 - https://github.com/TheArkive/JXON_ahk2
+;;;; AHK v2 JSON parser - https://github.com/TheArkive/JXON_ahk2
 
-; Msgbox "The idea here is to create several nested arrays, save to text with jxon_dump(), and then reload the array with jxon_load().  The resulting array should be the same.`r`n`r`nThis is what this example shows."
-; a := Map(), b := Map(), c := Map(), d := Map(), e := Map(), f := Map() ; Object() is more technically correct than {} but both will work.
-
-; d["g"] := 1, d["h"] := 2, d["i"] := ["purple","pink","pippy red"]
-; e["g"] := 1, e["h"] := 2, e["i"] := Map("1","test1","2","test2","3","test3")
-; f["g"] := 1, f["h"] := 2, f["i"] := [1,2,Map("a",1.0009,"b",2.0003,"c",3.0001)]
-
-; a["test1"] := "test11", a["d"] := d
-; b["test3"] := "test33", b["e"] := e
-; c["test5"] := "test55", c["f"] := f
-
-; myObj := Map()
-; myObj["a"] := a, myObj["b"] := b, myObj["c"] := c, myObj["test7"] := "test77", myObj["test8"] := "test88"
-
-; g := ["blue","green","red"], myObj["h"] := g ; add linear array for testing
-
-; q := Chr(34)
-; textData2 := Jxon_dump(myObj,4) ; ===> convert array to JSON
-; msgbox "JSON output text:`r`n===========================================`r`n(Should match second output.)`r`n`r`n" textData2
-
-; newObj := Jxon_load(&textData2) ; ===> convert json back to array
-
-; textData3 := Jxon_dump(newObj,4) ; ===> break down array into 2D layout again, should be identical
-; msgbox "Second output text:`r`n===========================================`r`n(should be identical to first output)`r`n`r`n" textData3
-
-; msgbox "textData2 = textData3:  " ((textData2=textData3) ? "true" : "false")
-class JsonService {
-	static load(&src, args*) {
-		return jxonLoadImpl(&src, args*)
-	}
-
-	static dump(obj, indent := "", lvl := 1) {
-		return jxonDumpImpl(obj, indent, lvl)
-	}
-}
-
-jxonLoadImpl(&src, args*) {
+jsonLoad(&src, args*) {
 	key := "", isKey := false
 	stack := [tree := []]
 	next := '"{[01234567890-tfn'
@@ -145,7 +109,7 @@ jxonLoadImpl(&src, args*) {
 	return tree[1]
 }
 
-jxonDumpImpl(obj, indent := "", lvl := 1) {
+jsonDump(obj, indent := "", lvl := 1) {
 	if IsObject(obj) {
 		If !(obj is Array || obj is Map || obj is String || obj is Number)
 			throw Error("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
@@ -172,9 +136,9 @@ jxonDumpImpl(obj, indent := "", lvl := 1) {
 				throw Error("Invalid object key.", -1, k ? Format("<Object at 0x{:p}>", ObjPtr(obj)) : "<blank>")
 
 			if !isArray ;// key ; ObjGetCapacity([k], 1)
-				out .= (ObjGetCapacity([k]) ? jxonDumpImpl(k) : escapeStr(k)) (indent ? ": " : ":") ; token + padding
+				out .= (ObjGetCapacity([k]) ? jsonDump(k) : escapeStr(k)) (indent ? ": " : ":") ; token + padding
 
-			out .= jxonDumpImpl(v, indent, lvl) ; value
+			out .= jsonDump(v, indent, lvl) ; value
 				. (indent ? ",`n" . indt : ",") ; token + indent
 		}
 
@@ -204,4 +168,3 @@ jxonDumpImpl(obj, indent := "", lvl := 1) {
 		return '"' obj '"'
 	}
 }
-

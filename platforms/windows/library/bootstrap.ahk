@@ -1,18 +1,13 @@
 ﻿#Requires AutoHotkey v2.0
-; Load application constants and `utils` before any service class runs (see health_check_custom/repo_config.py snippets).
-#Include config\constants-core-base.ahk
-#Include config\constants-core-paths.ahk
-#Include config\constants-core-apps.ahk
-#Include config\constants-core-rules.ahk
+; Load application constants and `utils` before any service class runs
 #Include config\constants-core.ahk
 #Include config\constants-secrets.ahk
 
-loadProductionConstants()
+loadCoreConstants()
 loadSecretConstants()
 
 #Include json-service.ahk
 #Include util.ahk
-global utils := AppUtils()
 
 #Include automation\memory.ahk
 #Include automation\hotkey-tracker.ahk

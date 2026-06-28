@@ -1,5 +1,5 @@
 ﻿:*:;;::{
-utils.paste("ñ",,True)
+utilPaste("ñ",,True)
 }
 :*:"+::{
 services.sap.insertCommentLine()
@@ -14,7 +14,7 @@ services.sap.insertCommentBlock()
 services.sap.insertCommentBlock()
 }
 ::sp::{
-utils.paste("summary in prompt",,true)
+utilPaste("summary in prompt",,true)
 }
 !e::{
 trackHotkeyEvent("!e", "hotkeys/global.ahk", "global")
@@ -95,9 +95,4 @@ reload()
 ~^c::{
 trackHotkeyEvent("~^c", "hotkeys/global.ahk", "global")
 services.snipaste.ctrlC()
-}
-
-trackHotkeyEvent(hotkeyId, sourceFile := "hotkeys/global.ahk", sourceGroup := "global") {
-  if IsSet(services) && services.HasOwnProp("hotkeyTracker")
-    services.hotkeyTracker.track(hotkeyId, sourceFile, sourceGroup)
 }

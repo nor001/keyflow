@@ -4,14 +4,21 @@ class WindowGroupService {
     this.wgId := ""
     this.wgIdlast := ""
     this.wgKey := ""
+    this.currentId := ""
+    this.currentTitle := ""
+    this.currentClass := ""
+    this.currentExe := ""
   }
 
   activateGroup(rules := [], name := "") {
-    utils.winNow()
+    this.currentId    := (WinExist("A") ? WinGetID("A") : "")
+    this.currentTitle := (this.currentId ? (t := WinGetTitle("A"), t ? t : WinGetClass("A")) : "")
+    this.currentClass := (this.currentId ? WinGetClass("A") : "")
+    this.currentExe   := (this.currentId ? WinGetProcessname("A") : "")
     this.wgKey := A_Thishotkey
     if !this.wgId
-      this.wgId := utils.A_Id
-    this.wgIdlast := utils.A_Id
+      this.wgId := this.currentId
+    this.wgIdlast := this.currentId
 
     windows := this.wgWin
     if this.wgWin.Length = 0
@@ -27,14 +34,14 @@ class WindowGroupService {
     if actives.Length > 0
     {
       targetId := actives[1].id
-      if WinActivate(targetId) = utils.A_Exe
+      if WinActivate(targetId) = this.currentExe
         Send("^{tab}")
       else
         WinActivate(targetId)
-      utils.A_Id := targetId
+      this.currentId := targetId
     }
     else
-      utils.tooltip("Windows not open: " StrUpper(name))
+      utilTooltip("Windows not open: " StrUpper(name))
 
     SetTimer(_jobGroupKey, 10)
     _jobGroupKey() {
@@ -59,7 +66,7 @@ class WindowGroupService {
       classLocal := WinGetClass(id)
       title := WinGetTitle(WinExist(id))
 
-      if !title or !utils.iswindow(id)
+      if !title or !utilIsWindow(id)
         continue
 
       matchedPattern := ""
@@ -104,7 +111,7 @@ class WindowGroupService {
       name := "zzz"
       for win in windows
       {
-        if InStr(win.match, utils.A_Exe) or InStr(win.match, utils.A_Class) or InStr(utils.A_Title, win.match)
+        if InStr(win.match, this.currentExe) or InStr(win.match, this.currentClass) or InStr(this.currentTitle, win.match)
         {
           name := win.group
           break
@@ -116,7 +123,7 @@ class WindowGroupService {
     {
       if this._isGroupMatch(win, name)
       {
-        if win.id = "ahk_id " utils.A_Id
+        if win.id = "ahk_id " this.currentId
         {
           windows.Push(win)
           windows.RemoveAt(i)
@@ -179,5 +186,9 @@ class WindowGroupService {
     this.wgWin := []
     this.wgId := ""
     this.wgIdlast := ""
+    this.currentId := ""
+    this.currentTitle := ""
+    this.currentClass := ""
+    this.currentExe := ""
   }
 }

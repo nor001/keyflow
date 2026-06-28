@@ -2,6 +2,7 @@
   "summary": {
     "ok": true,
     "issue_count": 0,
+    "ai_readiness": 100,
     "services": [
       "dynamic",
       "everything",
@@ -45,7 +46,7 @@
       "ai/repo-map.json",
       "ai/health-check.summary.json"
     ],
-    "next_frontier": "Continue shrinking dormant runtime surface and optional UI helpers after each validated rename."
+    "next_frontier": "Catalog content freshness is the only remaining pending item — requires human domain verification. All structural and code simplification targets complete."
   },
   "issues": {
     "include_missing": [],
@@ -66,26 +67,6 @@
   },
   "contracts": {
     "include_graph": [
-      {
-        "file": "platforms/windows/hotkeys/domains.ahk",
-        "includes": [
-          {
-            "include": "domains/comms.ahk",
-            "target": "platforms/windows/hotkeys/domains/comms.ahk",
-            "exists": true
-          },
-          {
-            "include": "domains/media-web.ahk",
-            "target": "platforms/windows/hotkeys/domains/media-web.ahk",
-            "exists": true
-          },
-          {
-            "include": "domains/productivity.ahk",
-            "target": "platforms/windows/hotkeys/domains/productivity.ahk",
-            "exists": true
-          }
-        ]
-      },
       {
         "file": "platforms/windows/hotkeys/domains/comms.ahk",
         "includes": []
@@ -111,27 +92,11 @@
         "includes": []
       },
       {
-        "file": "platforms/windows/hotkeys/editors.ahk",
-        "includes": [
-          {
-            "include": "editors-ide.ahk",
-            "target": "platforms/windows/hotkeys/editors-ide.ahk",
-            "exists": true
-          },
-          {
-            "include": "editors-office.ahk",
-            "target": "platforms/windows/hotkeys/editors-office.ahk",
-            "exists": true
-          },
-          {
-            "include": "editors-text.ahk",
-            "target": "platforms/windows/hotkeys/editors-text.ahk",
-            "exists": true
-          }
-        ]
+        "file": "platforms/windows/hotkeys/global.ahk",
+        "includes": []
       },
       {
-        "file": "platforms/windows/hotkeys/global.ahk",
+        "file": "platforms/windows/hotkeys/hotkey-tracking.ahk",
         "includes": []
       },
       {
@@ -143,21 +108,6 @@
         "includes": []
       },
       {
-        "file": "platforms/windows/hotkeys/sap.ahk",
-        "includes": [
-          {
-            "include": "sap-gui.ahk",
-            "target": "platforms/windows/hotkeys/sap-gui.ahk",
-            "exists": true
-          },
-          {
-            "include": "sap-eclipse.ahk",
-            "target": "platforms/windows/hotkeys/sap-eclipse.ahk",
-            "exists": true
-          }
-        ]
-      },
-      {
         "file": "platforms/windows/keyflow.ahk",
         "includes": [
           {
@@ -166,23 +116,53 @@
             "exists": true
           },
           {
+            "include": "hotkeys/hotkey-tracking.ahk",
+            "target": "platforms/windows/hotkeys/hotkey-tracking.ahk",
+            "exists": true
+          },
+          {
             "include": "hotkeys/global.ahk",
             "target": "platforms/windows/hotkeys/global.ahk",
             "exists": true
           },
           {
-            "include": "hotkeys/sap.ahk",
-            "target": "platforms/windows/hotkeys/sap.ahk",
+            "include": "hotkeys/sap-gui.ahk",
+            "target": "platforms/windows/hotkeys/sap-gui.ahk",
             "exists": true
           },
           {
-            "include": "hotkeys/editors.ahk",
-            "target": "platforms/windows/hotkeys/editors.ahk",
+            "include": "hotkeys/sap-eclipse.ahk",
+            "target": "platforms/windows/hotkeys/sap-eclipse.ahk",
             "exists": true
           },
           {
-            "include": "hotkeys/domains.ahk",
-            "target": "platforms/windows/hotkeys/domains.ahk",
+            "include": "hotkeys/editors-ide.ahk",
+            "target": "platforms/windows/hotkeys/editors-ide.ahk",
+            "exists": true
+          },
+          {
+            "include": "hotkeys/editors-office.ahk",
+            "target": "platforms/windows/hotkeys/editors-office.ahk",
+            "exists": true
+          },
+          {
+            "include": "hotkeys/editors-text.ahk",
+            "target": "platforms/windows/hotkeys/editors-text.ahk",
+            "exists": true
+          },
+          {
+            "include": "hotkeys/domains/comms.ahk",
+            "target": "platforms/windows/hotkeys/domains/comms.ahk",
+            "exists": true
+          },
+          {
+            "include": "hotkeys/domains/media-web.ahk",
+            "target": "platforms/windows/hotkeys/domains/media-web.ahk",
+            "exists": true
+          },
+          {
+            "include": "hotkeys/domains/productivity.ahk",
+            "target": "platforms/windows/hotkeys/domains/productivity.ahk",
             "exists": true
           }
         ]
@@ -252,26 +232,6 @@
       {
         "file": "platforms/windows/library/bootstrap.ahk",
         "includes": [
-          {
-            "include": "config/constants-core-base.ahk",
-            "target": "platforms/windows/library/config/constants-core-base.ahk",
-            "exists": true
-          },
-          {
-            "include": "config/constants-core-paths.ahk",
-            "target": "platforms/windows/library/config/constants-core-paths.ahk",
-            "exists": true
-          },
-          {
-            "include": "config/constants-core-apps.ahk",
-            "target": "platforms/windows/library/config/constants-core-apps.ahk",
-            "exists": true
-          },
-          {
-            "include": "config/constants-core-rules.ahk",
-            "target": "platforms/windows/library/config/constants-core-rules.ahk",
-            "exists": true
-          },
           {
             "include": "config/constants-core.ahk",
             "target": "platforms/windows/library/config/constants-core.ahk",
@@ -358,22 +318,6 @@
             "exists": true
           }
         ]
-      },
-      {
-        "file": "platforms/windows/library/config/constants-core-apps.ahk",
-        "includes": []
-      },
-      {
-        "file": "platforms/windows/library/config/constants-core-base.ahk",
-        "includes": []
-      },
-      {
-        "file": "platforms/windows/library/config/constants-core-paths.ahk",
-        "includes": []
-      },
-      {
-        "file": "platforms/windows/library/config/constants-core-rules.ahk",
-        "includes": []
       },
       {
         "file": "platforms/windows/library/config/constants-core.ahk",
@@ -843,7 +787,6 @@
       {
         "file": "platforms/windows/hotkeys/global.ahk",
         "calls": [
-          "hotkeyTracker.track",
           "run.openApp",
           "sap.insertCommentBlock",
           "sap.insertCommentLine",
@@ -859,6 +802,12 @@
           "windows.snapWindowLeft",
           "windows.snapWindowRight",
           "windows.soundToggle"
+        ]
+      },
+      {
+        "file": "platforms/windows/hotkeys/hotkey-tracking.ahk",
+        "calls": [
+          "hotkeyTracker.track"
         ]
       },
       {

@@ -19,7 +19,7 @@
   }
 
   playSelectedMedia() {
-    filename := utils.clipboardRead("^+c", 0.3)
+    filename := utilClipboardRead("^+c", 0.3)
 
     if this._isMediaPath(filename)
     {
@@ -33,7 +33,6 @@
     files := this._readSelectedFiles()
     pastedAny := false
 
-    utils.winNow()
     this.closeAndWait()
 
     Loop Parse, files, "`n", "`r"
@@ -45,13 +44,13 @@
         continue
 
       services.everything.incrementRunCount(selectedFile)
-      utils.paste(Fileread(selectedFile), True)
+      utilPaste(Fileread(selectedFile), True)
       pastedAny := true
     }
 
     this._waitAfterPaste()
 
-    utils.tooltip("Pasted", pastedAny ? "ok" : "no valid file")
+    utilTooltip("Pasted", pastedAny ? "ok" : "no valid file")
   }
 
   save() {
@@ -68,23 +67,23 @@
       A_Clipboard := ""
     }
 
-    utils.tooltip("Saved", selectedFile)
+    utilTooltip("Saved", selectedFile)
   }
 
   _readSelectedFiles() {
-    files := utils.clipboardRead("^+c", 0.7)
+    files := utilClipboardRead("^+c", 0.7)
     if !files
     {
       Send("{down}")
-      files := utils.clipboardRead("^+c", 0.7)
+      files := utilClipboardRead("^+c", 0.7)
     }
     return files
   }
 
   _readSelectedFile() {
     if winactive(exeXyplorer)
-      return utils.clipboardRead("^p", 0.5)
-    return utils.clipboardRead("^+c", 0.4)
+      return utilClipboardRead("^p", 0.5)
+    return utilClipboardRead("^+c", 0.4)
   }
 
   _isPasteableTextFile(filename) {
@@ -101,4 +100,3 @@
     Sleep 200
   }
 }
-

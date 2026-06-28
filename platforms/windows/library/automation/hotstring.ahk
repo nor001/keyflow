@@ -105,7 +105,7 @@
     try
     {
       jsonText := FileRead(path)
-      return JsonService.load(&jsonText)
+      return jsonLoad(&jsonText)
     }
     catch as errorInfo
     {

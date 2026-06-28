@@ -8,7 +8,7 @@
     else
       this._activateOrRunTarget(target, title)
 
-    if utils.isExit(noExit)
+    if utilIsExit(noExit)
       Exit()
 
     return title
@@ -17,7 +17,7 @@
   runCommand(command) {
     this._prepareHotkeyLaunch()
 
-    utils.tooltip(command)
+    utilTooltip(command)
     Run(A_Comspec ' /c ' command, ,"hide")
   }
 
@@ -33,7 +33,7 @@
   }
 
   _run(filename) {
-    utils.tooltip(filename)
+    utilTooltip(filename)
 
     try run(filename)
     catch as e

@@ -1,21 +1,167 @@
-﻿loadCoreConstants(){
+loadCoreConstants() {
   loadCoreBaseConstants()
   loadCorePathConstants()
   loadCoreApplicationConstants()
   loadCoreRuleConstants()
 }
 
-loadProductionConstants(){
-	return loadCoreConstants()
+loadCoreBaseConstants() {
+  global
+  constDayEs := FormatTime(, "dd.MM.yy")
+  tab := "{tab}"
+  enter := "{enter}"
+  runtimeEnvFile := runtimeEnvFilePath()
+  EnvSet("YMT1", runtimeEnvValue(runtimeEnvFile, "YMT1", "ym.lnk||X|"))
+  EnvSet("YSAP", runtimeEnvValue(runtimeEnvFile, "YSAP", "ym.lnk||X|"))
+  sapDefaultTcodeFallback := runtimeConfigValue(runtimeEnvFile, "sap-defaults", "defaultTcodeFallback", "smen")
+  sapDelayPollMs := runtimeConfigValue(runtimeEnvFile, "sap-delays", "pollMs", "100")
+}
+
+runtimeEnvFilePath() {
+  SplitPath(A_LineFile, , &configDir)
+  return configDir "\..\..\data\local-startup.ini"
+}
+
+runtimeEnvValue(configFile, key, defaultValue := "") {
+  return IniRead(configFile, "runtime-env", key, defaultValue)
+}
+
+runtimeConfigValue(configFile, section, key, defaultValue := "") {
+  return IniRead(configFile, section, key, defaultValue)
+}
+
+loadCorePathConstants() {
+  global
+  pathOneDrive := EnvGet("onedrive")
+  SplitPath(A_LineFile, , &pathScript)
+  SplitPath(pathScript, , &pathScript)
+  SplitPath(pathScript, , &pathScript)
+  SplitPath(pathScript, , &pathScriptOnelevelup)
+  dataDir := resolveDataDir(pathScript)
+  memoryVarsIniFile := dataDir "memory-vars.ini"
+  hotkeyTrackerJsonFile := dataDir "hotkey-usage.json"
+  localPathsFile := localPathsFilePath(pathScript)
+  pathAbapGitRepo := pathConfigValue(localPathsFile, "pathAbapGitRepo", "")
+  pathYmWorkspace := pathConfigValue(localPathsFile, "pathYmWorkspace", "")
+  pathAbapInbox := pathConfigValue(localPathsFile, "pathAbapInbox", "")
+  fileEverythingCli := pathConfigValue(localPathsFile, "fileEverythingCli", pathScriptOnelevelup "\exe\everything\es.exe")
 }
 
 resolveDataDir(pathScript) {
-  dataPath := pathScript "\data\"
-  if DirExist(dataPath)
-    return dataPath
-  return dataPath
+  return pathScript "\data\"
 }
 
+localPathsFilePath(pathScript) {
+  return pathScript "\data\local-paths.ini"
+}
 
+pathConfigValue(localPathsFile, key, defaultValue := "") {
+  return IniRead(localPathsFile, "paths", key, defaultValue)
+}
 
+loadCoreApplicationConstants() {
+  global
+  exeCursor := "ahk_exe Cursor.exe"
+  exeEclipse := "ahk_exe eclipse.exe"
+  exeFirefox := "ahk_exe firefox.exe"
+  exeMsEdge := "ahk_exe msedge.exe"
+  exeNotion := "ahk_exe Notion.exe"
+  exeNwbc := "ahk_exe NWBC.exe"
+  exeObsidian := "ahk_exe Obsidian.exe"
+  exeOutlookNew := "ahk_exe olk.exe"
+  exeOnenote := "ahk_exe ONENOTE.EXE"
+  exeOutlook := "ahk_exe OUTLOOK.EXE"
+  exePostman := "ahk_exe postman.exe"
+  exeLibreOfficeBinary := "ahk_exe soffice.bin"
+  exeSublimeText := "ahk_exe sublime_text.exe"
+  exeSwitcheroo := "ahk_exe switcheroo.exe"
+  exeTodoist := "ahk_exe Todoist.exe"
+  exeVlc := "ahk_exe vlc.exe"
+  exeWinword := "ahk_exe WINWORD.EXE"
+  exeWordpad := "ahk_exe wordpad.exe"
+  exeXyplorer := "ahk_exe XYplorer.exe"
+  exeEverything := "ahk_exe Everything64.exe"
+  exeFlowlauncher := "ahk_exe Flow.Launcher.exe"
+  exeMediaPlayerClassic := "ahk_exe mpc-hc64.exe"
+  exeMsTeams := "ahk_exe ms-teams.exe"
+  exeNotepad := "ahk_exe notepad++.exe"
+  exeVscode := "ahk_exe Code.exe"
+  exeVscodeInsiders := "ahk_exe Code - Insiders.exe"
+  classExcel := "ahk_class XLMAIN"
+  classSapGuiSession := "ahk_class SAP_FRONTEND_SESSION"
+  controlOfficeImage := "RichEdit20W16"
+  titleTaskTimeTracker := appConfigValue(localPathsFile, "titleTaskTimeTracker", "kur-time")
+  titleLibreCalc := "LibreOffice Calc"
+  titleChatGpt := "ChatGPT"
+  titleDocFetcher := "DocFetcher"
+  titleInsomnia := "Insomnia"
+  titleSnipaste := "Snipper - Snipaste"
+  titleUdemyPlatform := "Udemy"
+  titleWhatsapp := "WhatsApp"
+  titleWrite := "LibreOffice Writer"
+  titleYoutube := "YouTube"
+  titleSap000 := "000 SAP"
+  titleSapGui := "SAP GUI"
+  titleSystemEntry := "Entrada al sistema"
+  titleLogonDataEntry := "Entrada de datos logon"
+  titleEclipseTransport := "TMS_UI_IMPORT_TR_REQUEST"
+}
 
+appConfigValue(localConfigFile, key, defaultValue := "") {
+  return IniRead(localConfigFile, "apps", key, defaultValue)
+}
+
+loadCoreRuleConstants() {
+  global
+  snipasteTargets := []
+  snipasteTargets.Push(["magick", exeOnenote])
+  snipasteTargets.Push(["magick_paste", exeMsTeams])
+  snipasteTargets.Push(["magick", titleWhatsapp])
+  snipasteTargets.Push(["magick", titleWrite])
+  snipasteTargets.Push(["magick", exeLibreOfficeBinary])
+  snipasteTargets.Push(["magick", exeOutlookNew])
+  snipasteTargets.Push(["magick", exeOutlook])
+  snipasteTargets.Push(["magick", exeObsidian])
+  snipasteTargets.Push(["magick", exeNotion])
+  snipasteTargets.Push(["", exeWinword])
+  snipasteTargets.Push(["", exeWordpad])
+
+  appActivationTargets := []
+  appActivationTargets.Push(["apps_control", titleTaskTimeTracker])
+  appActivationTargets.Push(["apps_note", exeOnenote])
+  appActivationTargets.Push(["apps_note", exeObsidian])
+  appActivationTargets.Push(["apps_ide", exeVscode])
+  appActivationTargets.Push(["apps_ide", exeCursor])
+  appActivationTargets.Push(["apps_support", exeSublimeText])
+  appActivationTargets.Push(["apps_support", exeNotepad])
+  appActivationTargets.Push(["apps_support", titleDocFetcher])
+  appActivationTargets.Push(["apps_support", exePostman])
+  appActivationTargets.Push(["apps_support", titleInsomnia])
+  appActivationTargets.Push(["apps_sap_windows", classSapGuiSession])
+  appActivationTargets.Push(["apps_sap_windows", exeNwbc])
+  appActivationTargets.Push(["apps_sap_eclipse", exeEclipse])
+  appActivationTargets.Push(["apps_sap_workspace", classSapGuiSession])
+  appActivationTargets.Push(["apps_sap_workspace", exeNwbc])
+  appActivationTargets.Push(["apps_sap_workspace", exeEclipse])
+
+  GroupAdd("group_launcher", exeEverything)
+  GroupAdd("group_launcher", exeFlowlauncher)
+  GroupAdd("group_launcher_apps", exeEverything)
+  GroupAdd("group_launcher_apps", exeFlowlauncher)
+  GroupAdd("group_sap_runtime_windows", classSapGuiSession)
+  GroupAdd("group_sap_runtime_windows", exeNwbc)
+  GroupAdd("group_sap_runtime_windows", "eclipse-workspace - DS")
+  GroupAdd("group_vscode_editors", exeVscode)
+  GroupAdd("group_vscode_editors", exeVscodeInsiders)
+  GroupAdd("group_typing_heavy", exeVscode)
+  GroupAdd("group_typing_heavy", exeVscodeInsiders)
+  GroupAdd("group_typing_heavy", exeSublimeText)
+  GroupAdd("group_typing_heavy", exeNotepad)
+  GroupAdd("group_typing_heavy", exeWinword)
+  GroupAdd("group_typing_heavy", exeOutlook)
+  GroupAdd("group_typing_heavy", exeOutlookNew)
+  GroupAdd("group_typing_heavy", exeMsTeams)
+  GroupAdd("group_typing_heavy", exeObsidian)
+  GroupAdd("group_typing_heavy", exeFirefox)
+  GroupAdd("group_typing_heavy", exeMsEdge)
+}
