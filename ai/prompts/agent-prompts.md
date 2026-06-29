@@ -8,15 +8,15 @@ Canonical prompt scaffold for dual-role work in `keyflow` and similar AI-first r
 
 ## 2. Planner role
 
-Use [ai/planner-prompt.md](planner-prompt.md) when a new technical frontier should be identified or a new plan should be written.
+Use [planner-prompt.md](planner-prompt.md) when a new technical frontier should be identified or a new plan should be written.
 
 ## 3. Architect role
 
-Use [ai/architect-prompt.md](architect-prompt.md) for frontier review and governance alignment work.
+Use [architect-prompt.md](architect-prompt.md) for frontier review and governance alignment work.
 
 ## 4. Executor role
 
-Use [ai/executor-prompt.md](executor-prompt.md) for implementation and validation work.
+Use [executor-prompt.md](executor-prompt.md) for implementation and validation work.
 
 ## Bootstrap a new AI-first repo
 

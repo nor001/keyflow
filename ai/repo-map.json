@@ -14,7 +14,10 @@
     "README.md",
     "ai/current-plan.md",
     "ai/governance.json",
-    "ai/agent-prompts.md",
+    "ai/prompts/agent-prompts.md",
+    "ai/prompts/executor-prompt.md",
+    "ai/prompts/architect-prompt.md",
+    "ai/prompts/planner-prompt.md",
     "ai/catalog-review.json",
     "ai/run_smoke.py",
     "platforms/windows/keyflow.ahk",
@@ -138,6 +141,9 @@
         "repo-map.json",
         "current-plan.md",
         "agent-prompts.md",
+        "executor-prompt.md",
+        "architect-prompt.md",
+        "planner-prompt.md",
         "governance.json",
         "catalog-review.json"
       ]

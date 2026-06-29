@@ -145,7 +145,7 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 - `ai/health_check.py` owns the enforced baseline for required role sections and phrases; `ai/governance.json` mirrors that baseline as the machine-readable contract and must match it.
 - `ai/review_check.py` reads required phrases from `ai/governance.json` for reviewer audits, using fallback constants only if governance is unavailable or malformed.
 - `ai/governance.json` now declares `required_current_model_phrases`; `ai/review_check.py` reads this list for reviewer audits, and `ai/health_check.py` validates the governance value against `REQUIRED_CURRENT_MODEL_PHRASES`.
-- `ai/agent-prompts.md` is now included in `ai/repo-map.json` `read-order`, making it visible to agents on first read.
+- `ai/prompts/agent-prompts.md` is now included in `ai/repo-map.json` `read-order`, making it visible to agents on first read.
 - `ai/run_smoke.py` records runtime smoke execution into `ai/run-result.json` so agents can distinguish "guide layer healthy" from "runtime smoke actually ran without parse errors".
 
 ## Next evolution frontier
