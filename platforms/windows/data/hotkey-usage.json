@@ -64,15 +64,15 @@
       "sourceGroup": "global"
     },
     "~^c": {
-      "count": 39,
+      "count": 41,
       "firstSeenUtc": "20260626163544",
-      "lastSeenUtc": "20260629154436",
+      "lastSeenUtc": "20260629155219",
       "sourceFile": "hotkeys\/global.ahk",
       "sourceGroup": "global"
     }
   },
   "meta": {
-    "updatedAtUtc": "20260629154436",
+    "updatedAtUtc": "20260629155219",
     "version": 1
   }
 }

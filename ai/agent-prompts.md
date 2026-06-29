@@ -2,13 +2,25 @@
 
 Strong reusable prompts for multi-agent work in `keyflow` and similar AI-first repos.
 
-## Primary execution prompt
+## Short instruction
+
+`Read AGENTS.md and execute ai/current-plan.md.`
+
+## Execute current repo
 
 `Read AGENTS.md first and treat it as the operational contract. This repo is permanently multi-agent and AI-first, so do not weaken handoff language, remove multi-agent guidance, or rewrite the guide layer as if only one AI will touch it. Run python ai/health_check.py --pretty --summary before changes and follow the mandatory workflow in AGENTS.md exactly. Respect ai/governance.json, human-owned contracts, and ai/current-plan.md when a frontier is active. After changes, regenerate the health-check artifacts, run python ai/review_check.py --pretty --summary when reviewing or closing a cycle, and update the guide layer if behavior, routing, governance, or next frontier changed.`
 
-## Primary review prompt
+## Review current repo
 
 `Read AGENTS.md first, then run python ai/health_check.py --pretty --summary and python ai/review_check.py --pretty --summary. Review the repo as a multi-agent handoff surface, not only as runtime code. Validate that AGENTS.md, README.md, ai/repo-map.json, ai/governance.json, ai/current-plan.md, and ai/health-check.summary.json all agree on the current model and frontier before proposing or making changes.`
+
+## Architect current repo
+
+`Read AGENTS.md, ai/repo-map.json, ai/governance.json, ai/health-check.summary.json, and ai/current-plan.md. Act as the architect role: choose or refine the next frontier, keep governance and handoff rules truthful, and leave ai/current-plan.md executable by another AI. Do not change runtime code unless the architectural correction requires it.`
+
+## Execute architect plan
+
+`Read AGENTS.md and ai/current-plan.md. Act as the executor role: implement the active plan with the smallest responsible file set, run the required health and review checks, and update the guide layer before handoff. If the plan is complete, mark it complete and defer the next technical plan unless a real new frontier is evident.`
 
 ## Bootstrap a new AI-first repo
 
@@ -27,9 +39,12 @@ Strong reusable prompts for multi-agent work in `keyflow` and similar AI-first r
 - `AGENTS.md`: operational contract
 - `README.md`: architecture and onboarding
 - `ai/`: machine-readable state, governance, review, and continuity
+- Architect/executor: optional roles for larger cycles; one AI may perform both when that is clearer
 
 ## Rule of thumb
 
-If you want execution, say `continue` or `execute`.
+If you want simple execution, say `Read AGENTS.md and execute ai/current-plan.md`.
+
+If you want normal execution, say `continue` or `execute`.
 
 If you want a critique or handoff audit, say `review`.

@@ -293,6 +293,17 @@ def build_review(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]
             }
         )
 
+    run_smoke_present = (repo_root / "ai/run_smoke.py").exists()
+    add_check("run-smoke-tooling-present", run_smoke_present, "ai/run_smoke.py exists — runtime smoke recorder is available")
+    if not run_smoke_present:
+        warnings.append(
+            {
+                "type": "run_smoke_tooling_missing",
+                "file": "ai/run_smoke.py",
+                "message": "ai/run_smoke.py is missing. Agents cannot record runtime smoke execution results.",
+            }
+        )
+
     result_summary = {
         "ok": len(issues) == 0,
         "issue_count": len(issues),

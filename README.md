@@ -8,6 +8,7 @@ For operational maintenance, use `ai/health-check.summary.json`, `ai/repo-map.js
 Machine-readable governance rules also live in `ai/governance.json`.
 Reviewer pass: run `python ai/review_check.py --pretty --summary` after another AI finishes a cycle.
 This guide layer is intentionally multi-agent; do not simplify it into a single-agent workflow.
+The workflow supports either one AI completing a full cycle or a split between architect and executor roles.
 
 ## Architecture
 
@@ -59,7 +60,7 @@ All machine-specific configuration is local-only. Use these versioned examples a
 
 Local-only files that must never be committed:
 
-`local-secrets.ini` · `local-paths.ini` · `local-startup.ini` · `memory-vars.ini` · `rom.ini` · `storage.db` · `hotkey-usage.json`
+`local-secrets.ini` · `local-paths.ini` · `local-startup.ini` · `memory-vars.ini` · `rom.ini` · `storage.db` · `hotkey-usage.json` · `ai/run-result.json`
 
 ## Startup scripts
 

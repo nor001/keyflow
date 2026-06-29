@@ -53,6 +53,7 @@ FORBIDDEN_SCAN_EXACT_PATHS = {
     "ai/health-check.json",
     "ai/health-check.summary.json",
     "ai/health_check.py",
+    "ai/run-result.json",
     "platforms/windows/data/hotkey-usage.json",
     "platforms/windows/data/local-secrets.ini",
     "platforms/windows/data/local-paths.ini",

@@ -16,6 +16,7 @@
     "ai/governance.json",
     "ai/agent-prompts.md",
     "ai/catalog-review.json",
+    "ai/run_smoke.py",
     "platforms/windows/keyflow.ahk",
     "platforms/windows/library/bootstrap.ahk",
     "platforms/windows/library/automation/sap-session.ahk",
@@ -129,8 +130,11 @@
       "owns": [
         "health_check.py",
         "review_check.py",
+        "run_smoke.py",
         "health-check.summary.json",
         "health-check.json",
+        "run-result.json",
+        "run-result.example.json",
         "repo-map.json",
         "current-plan.md",
         "agent-prompts.md",
@@ -169,6 +173,7 @@
     "startup-vmware"
   ],
   "local-only-files": [
+    "ai/run-result.json",
     "platforms/windows/data/hotkey-usage.json",
     "platforms/windows/data/local-secrets.ini",
     "platforms/windows/data/local-paths.ini",
@@ -181,6 +186,6 @@
   "standalone": [
     "platforms/windows/hotkeys/layouts/colemak-dh.ahk"
   ],
-  "current-focus": "Stable AI-first runtime, normalized local-only contract, and machine-enforced multi-agent governance, with the next tooling step focused on runtime execution observability beyond guide-layer health.",
-  "next-frontier": "Execute ai/current-plan.md to add machine-readable runtime execution observability for AutoHotkey smoke runs."
+  "current-focus": "Stable AI-first runtime, normalized local-only contract, machine-enforced multi-agent governance, optional architect/executor role split, and runtime execution observability via ai/run_smoke.py and ai/run-result.json.",
+  "next-frontier": "No active frontier. Next technical plan deferred until a real frontier appears. Replace ai/current-plan.md when a new technical frontier is identified."
 }
