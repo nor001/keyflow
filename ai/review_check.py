@@ -12,7 +12,14 @@ NO_ACTIVE_FRONTIER = (
     "No active frontier. Next technical plan deferred until a real frontier appears. "
     "Replace ai/current-plan.md when a new technical frontier is identified."
 )
-REQUIRED_AGENTS_PHRASES = (
+
+REGENERATE_COMMAND = (
+    "python ai/health_check.py --pretty "
+    "--output ai/health-check.json --output-summary ai/health-check.summary.json"
+)
+
+# Fallback phrases used only when governance.json is unavailable or malformed.
+_FALLBACK_AGENTS_PHRASES = (
     "This repository is permanently operated as a multi-agent AI-first repo.",
     "This repo is shared by multiple AIs.",
     "Write for the next agent, not for your own memory.",
@@ -45,6 +52,24 @@ def detect_plan_state(plan_text: str) -> str:
     return "active"
 
 
+def is_stale_summary(summary_frontier: str, repo_map_frontier: str, plan_state: str) -> bool:
+    """Return True when the mismatch looks like a stale generated artifact rather than
+    a real contract disagreement.  The heuristic: the repo-map (authoritative) has an
+    active frontier while the summary (generated) still reflects the previous closed
+    state, or vice-versa.  Either way the fix is to regenerate, not to edit guides.
+    """
+    if summary_frontier == repo_map_frontier:
+        return False
+    # If one side is the known no-frontier sentinel and the other is not, the artifact
+    # was simply not regenerated after the frontier changed.
+    if summary_frontier == NO_ACTIVE_FRONTIER or repo_map_frontier == NO_ACTIVE_FRONTIER:
+        return True
+    # Both are non-empty and different — also a staleness signal (frontier text changed).
+    if summary_frontier and repo_map_frontier:
+        return True
+    return False
+
+
 def build_review(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
     summary_path = repo_root / "ai/health-check.summary.json"
     repo_map_path = repo_root / "ai/repo-map.json"
@@ -61,6 +86,9 @@ def build_review(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]
     readme_text = read_text(readme_path)
     plan_text = read_text(current_plan_path)
     gitignore_text = read_text(gitignore_path)
+
+    # Load multi-agent contract requirements from governance (single source of truth).
+    required_agents_phrases: list[str] = governance.get("required_agents_phrases") or list(_FALLBACK_AGENTS_PHRASES)
 
     agents_frontier = find_section(agents_text, "Next evolution frontier")
     agents_model = find_section(agents_text, "Current model")
@@ -91,13 +119,25 @@ def build_review(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]
     frontier_aligned = summary_frontier == repo_map_frontier
     add_check("frontier-alignment", frontier_aligned, "summary next_frontier matches repo-map next-frontier")
     if not frontier_aligned:
-        issues.append(
-            {
-                "type": "frontier_mismatch",
-                "file": "ai/repo-map.json",
-                "message": "ai/health-check.summary.json and ai/repo-map.json disagree about the next frontier.",
-            }
-        )
+        if is_stale_summary(summary_frontier, repo_map_frontier, plan_state):
+            issues.append(
+                {
+                    "type": "stale_summary",
+                    "file": "ai/health-check.summary.json",
+                    "message": (
+                        "ai/health-check.summary.json is stale relative to ai/repo-map.json. "
+                        f"Regenerate with: {REGENERATE_COMMAND}"
+                    ),
+                }
+            )
+        else:
+            issues.append(
+                {
+                    "type": "frontier_mismatch",
+                    "file": "ai/repo-map.json",
+                    "message": "ai/health-check.summary.json and ai/repo-map.json disagree about the next frontier.",
+                }
+            )
 
     agents_mentions_plan = "ai/current-plan.md" in agents_frontier
     add_check("agents-plan-reference", agents_mentions_plan, "AGENTS next frontier section references ai/current-plan.md when needed")
@@ -166,7 +206,7 @@ def build_review(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]
             }
         )
 
-    missing_phrases = [phrase for phrase in REQUIRED_AGENTS_PHRASES if phrase not in agents_text]
+    missing_phrases = [phrase for phrase in required_agents_phrases if phrase not in agents_text]
     add_check("agents-multi-agent-phrases", len(missing_phrases) == 0, "AGENTS preserves mandatory multi-agent contract phrases")
     for phrase in missing_phrases:
         issues.append(

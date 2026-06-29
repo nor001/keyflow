@@ -135,11 +135,14 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 - `ai/health_check.py` now enforces runtime-local boundary consistency via `validate_local_only_contract()`.
 - `ai/health_check.py` and `ai/review_check.py` now make multi-agent governance drift machine-visible by enforcing required guide sections, phrases, frontier state, and reviewer handoff commands.
 - `ai/review_check.py` is the reviewer-oriented audit for cycle closure, guide alignment, and multi-agent handoff quality.
+- `ai/review_check.py` now distinguishes stale generated artifacts (`stale_summary` with regeneration command) from real contract failures, eliminating reviewer false positives caused by un-regenerated summaries.
+- `ai/health_check.py` and `ai/review_check.py` now load `required_agents_sections` and `required_agents_phrases` from `ai/governance.json` instead of maintaining parallel hardcoded constants. `ai/governance.json` is the single enforced source for the multi-agent contract.
 
 ## Next evolution frontier
 
-- Execute `ai/current-plan.md`: make governance the single source of truth for multi-agent enforcement and remove stale-summary false positives from reviewer flow.
-- Start with `ai/review_check.py` summary-staleness handling and duplicated required-phrase constants across validators.
+- Governance single-source and reviewer robustness plan is complete. `ai/review_check.py` emits `stale_summary` with regeneration command instead of misleading failures; both validators load contract requirements from `ai/governance.json`.
+- No human-only pending work remains from the completed plan.
+- Next technical plan: deferred. No new technical frontier is identified at this time. Replace `ai/current-plan.md` when a real frontier appears.
 
 ## Validation
 

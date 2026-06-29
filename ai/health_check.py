@@ -747,7 +747,11 @@ def validate_local_only_contract(
     return issues
 
 
-def validate_guide_contracts(repo_root: Path, repo_map: dict[str, object]) -> list[dict[str, str]]:
+def validate_guide_contracts(
+    repo_root: Path,
+    repo_map: dict[str, object],
+    governance: dict[str, object],
+) -> list[dict[str, str]]:
     issues: list[dict[str, str]] = []
     agents_text = read_text(repo_root / "AGENTS.md")
     readme_text = read_text(repo_root / "README.md")
@@ -770,7 +774,10 @@ def validate_guide_contracts(repo_root: Path, repo_map: dict[str, object]) -> li
             }
         )
 
-    for section in REQUIRED_AGENTS_SECTIONS:
+    # Use governance.json as the single source of truth for required sections/phrases;
+    # fall back to module-level constants only if governance data is unavailable.
+    gov_sections = governance.get("required_agents_sections") or list(REQUIRED_AGENTS_SECTIONS)
+    for section in gov_sections:
         if section not in agents_text:
             issues.append(
                 {
@@ -780,7 +787,8 @@ def validate_guide_contracts(repo_root: Path, repo_map: dict[str, object]) -> li
                 }
             )
 
-    for phrase in REQUIRED_AGENTS_PHRASES:
+    gov_phrases = governance.get("required_agents_phrases") or list(REQUIRED_AGENTS_PHRASES)
+    for phrase in gov_phrases:
         if phrase not in agents_text:
             issues.append(
                 {
@@ -1167,7 +1175,7 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
     unused_groups = scan_group_candidates(repo_root, token_counter)
     forbidden_references = scan_forbidden_references(repo_root)
     repo_map_contract_issues = validate_repo_map_contracts(repo_root, repo_map, startup_sections) if repo_map else []
-    guide_contract_issues = validate_guide_contracts(repo_root, repo_map) if repo_map else []
+    guide_contract_issues = validate_guide_contracts(repo_root, repo_map, governance_result) if repo_map else []
     hotkey_counts = scan_hotkey_counts(hotkeys_dir, repo_root)
     unclosed_hotif = scan_unclosed_hotif(hotkeys_dir, repo_root)
     local_only_contract_issues = validate_local_only_contract(repo_root, repo_map) if repo_map else []
