@@ -6,6 +6,8 @@ Private Windows automation workspace built on AutoHotkey v2. This repo is optimi
 
 For operational maintenance, use `ai/health-check.summary.json`, `ai/repo-map.json`, and `AGENTS.md` before changing runtime files.
 Machine-readable governance rules also live in `ai/governance.json`.
+Reviewer pass: run `python ai/review_check.py --pretty --summary` after another AI finishes a cycle.
+This guide layer is intentionally multi-agent; do not simplify it into a single-agent workflow.
 
 ## Architecture
 

@@ -4,7 +4,7 @@ Strong reusable prompts for multi-agent work in `keyflow` and similar AI-first r
 
 ## Continue current repo
 
-`Read AGENTS.md, run the required health check, follow the mandatory workflow, respect ai/governance.json and human-owned contracts, and continue with the current frontier.`
+`Read AGENTS.md, run the required health check, follow the mandatory workflow, respect ai/governance.json and human-owned contracts, preserve the repo's multi-agent operating model, and continue with the current frontier.`
 
 ## Bootstrap a new AI-first repo
 
@@ -17,6 +17,10 @@ Strong reusable prompts for multi-agent work in `keyflow` and similar AI-first r
 ## Open a new technical plan
 
 `Read AGENTS.md, ai/repo-map.json, ai/governance.json, and ai/health-check.summary.json, then replace ai/current-plan.md only if a real runtime, contract, or workflow hotspot is evident from the repo.`
+
+## Review another agent's cycle
+
+`Read AGENTS.md, run python ai/health_check.py --pretty --summary, then run python ai/review_check.py --pretty --summary. Validate that the guide layer, plan state, and next frontier are aligned before proposing any new work.`
 
 ## Mental model
 

@@ -50,6 +50,11 @@
       "id": "health-check",
       "path": "ai/health_check.py",
       "role": "Validation guard and machine-readable state generator."
+    },
+    {
+      "id": "review-check",
+      "path": "ai/review_check.py",
+      "role": "Reviewer-oriented audit for cycle closure, guide alignment, and handoff quality."
     }
   ],
   "domains": [
@@ -122,6 +127,7 @@
       "path": "ai/",
       "owns": [
         "health_check.py",
+        "review_check.py",
         "health-check.summary.json",
         "health-check.json",
         "repo-map.json",
@@ -174,6 +180,6 @@
   "standalone": [
     "platforms/windows/hotkeys/layouts/colemak-dh.ahk"
   ],
-  "current-focus": "Stable multi-agent guide layer with verified catalog review state and machine-visible governance, with the remaining technical drift concentrated in runtime-local artifact classification.",
-  "next-frontier": "Execute ai/current-plan.md to normalize the runtime-local artifact contract and teach health_check.py to enforce it."
+  "current-focus": "Stable AI-first runtime and normalized local-only contract, with the next hardening step focused on making the multi-agent governance contract impossible to weaken silently.",
+  "next-frontier": "Execute ai/current-plan.md to harden the multi-agent governance contract and make guide-layer drift machine-visible."
 }

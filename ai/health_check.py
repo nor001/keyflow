@@ -53,6 +53,7 @@ FORBIDDEN_SCAN_EXACT_PATHS = {
     "ai/health-check.json",
     "ai/health-check.summary.json",
     "ai/health_check.py",
+    "platforms/windows/data/hotkey-usage.json",
     "platforms/windows/data/local-secrets.ini",
     "platforms/windows/data/local-paths.ini",
     "platforms/windows/data/local-startup.ini",
@@ -71,6 +72,16 @@ KNOWN_DEAD_CONSTANTS: tuple[str, ...] = ()
 CATALOG_REVIEW_FILE = "ai/catalog-review.json"
 CATALOG_REVIEW_STATUS_VALUES = {"pending_human_review", "verified"}
 GOVERNANCE_FILE = "ai/governance.json"
+REQUIRED_AGENTS_SECTIONS = (
+    "## Repo identity",
+    "## Multi-agent rules",
+    "## Next evolution frontier",
+)
+REQUIRED_AGENTS_PHRASES = (
+    "This repository is permanently operated as a multi-agent AI-first repo.",
+    "This repo is shared by multiple AIs.",
+    "Write for the next agent, not for your own memory.",
+)
 
 
 def to_repo_path(path: Path, repo_root: Path) -> str:
@@ -555,6 +566,33 @@ def validate_governance_contract(
             }
         )
 
+    if payload.get("multi_agent_repo") is not True:
+        issues.append(
+            {
+                "type": "governance_multi_agent_missing",
+                "file": GOVERNANCE_FILE,
+                "message": "governance.json must declare multi_agent_repo=true.",
+            }
+        )
+
+    if payload.get("required_agents_sections") != list(REQUIRED_AGENTS_SECTIONS):
+        issues.append(
+            {
+                "type": "governance_agents_sections_mismatch",
+                "file": GOVERNANCE_FILE,
+                "message": "governance.json required_agents_sections do not match the enforced multi-agent contract.",
+            }
+        )
+
+    if payload.get("required_agents_phrases") != list(REQUIRED_AGENTS_PHRASES):
+        issues.append(
+            {
+                "type": "governance_agents_phrases_mismatch",
+                "file": GOVERNANCE_FILE,
+                "message": "governance.json required_agents_phrases do not match the enforced multi-agent contract.",
+            }
+        )
+
     for rel_path in expected_guide_authority + expected_human_owned_contracts + [expected_detailed_plan_path]:
         if not (repo_root / rel_path).exists():
             issues.append(
@@ -664,6 +702,51 @@ def validate_repo_map_contracts(
     return issues
 
 
+def validate_local_only_contract(
+    repo_root: Path,
+    repo_map: dict[str, object],
+) -> list[dict[str, str]]:
+    """Detect runtime-local boundary drift: verify every file in repo-map
+    local-only-files is covered by .gitignore and acknowledged in AGENTS.md.
+    This check is cheap, deterministic, and machine-visible before cleanup starts.
+    """
+    issues: list[dict[str, str]] = []
+    local_only_files = repo_map.get("local-only-files", [])
+    if not isinstance(local_only_files, list):
+        return issues
+
+    gitignore_path = repo_root / ".gitignore"
+    agents_path = repo_root / "AGENTS.md"
+
+    gitignore_text = read_text(gitignore_path) if gitignore_path.exists() else ""
+    agents_text = read_text(agents_path) if agents_path.exists() else ""
+
+    seen_basenames: set[str] = set()
+    for entry in local_only_files:
+        if not isinstance(entry, str):
+            continue
+        basename = Path(entry).name
+        if basename in seen_basenames:
+            continue  # already checked (e.g. storage.db appears twice with different paths)
+        seen_basenames.add(basename)
+
+        if basename not in gitignore_text:
+            issues.append({
+                "type": "local_only_gitignore_gap",
+                "file": ".gitignore",
+                "message": f"Runtime-local artifact '{basename}' is in repo-map local-only-files but not covered by .gitignore.",
+            })
+
+        if basename not in agents_text:
+            issues.append({
+                "type": "local_only_agents_gap",
+                "file": "AGENTS.md",
+                "message": f"Runtime-local artifact '{basename}' is in repo-map local-only-files but not acknowledged in AGENTS.md.",
+            })
+
+    return issues
+
+
 def validate_guide_contracts(repo_root: Path, repo_map: dict[str, object]) -> list[dict[str, str]]:
     issues: list[dict[str, str]] = []
     agents_text = read_text(repo_root / "AGENTS.md")
@@ -687,12 +770,41 @@ def validate_guide_contracts(repo_root: Path, repo_map: dict[str, object]) -> li
             }
         )
 
+    for section in REQUIRED_AGENTS_SECTIONS:
+        if section not in agents_text:
+            issues.append(
+                {
+                    "type": "agents_required_section_missing",
+                    "file": "AGENTS.md",
+                    "message": f"AGENTS.md is missing required multi-agent section: {section}",
+                }
+            )
+
+    for phrase in REQUIRED_AGENTS_PHRASES:
+        if phrase not in agents_text:
+            issues.append(
+                {
+                    "type": "agents_required_phrase_missing",
+                    "file": "AGENTS.md",
+                    "message": f"AGENTS.md is missing required multi-agent contract phrase: {phrase}",
+                }
+            )
+
     if "ai operating guide" not in readme_text.lower() and "read first" not in readme_text.lower():
         issues.append(
             {
                 "type": "readme_operating_guide_missing",
                 "file": "README.md",
                 "message": "README.md must expose a short read-first operating guide section.",
+            }
+        )
+
+    if "multi-agent" not in readme_text.lower():
+        issues.append(
+            {
+                "type": "readme_multi_agent_missing",
+                "file": "README.md",
+                "message": "README.md must explicitly acknowledge the multi-agent operating model.",
             }
         )
 
@@ -982,6 +1094,7 @@ def build_summary(
     guide_contract_issues: list,
     catalog_review_issues: list,
     governance_issues: list,
+    local_only_contract_issues: list,
     dead_candidates: dict,
     profile_results: list,
     registry: dict,
@@ -992,7 +1105,7 @@ def build_summary(
     governance_result: dict[str, object],
     next_frontier: str = "",
 ) -> dict[str, object]:
-    issues = include_missing + registry_issues + service_call_issues + profile_issues + guide_contract_issues + catalog_review_issues + governance_issues + unclosed_hotif + forbidden_references
+    issues = include_missing + registry_issues + service_call_issues + profile_issues + guide_contract_issues + catalog_review_issues + governance_issues + local_only_contract_issues + unclosed_hotif + forbidden_references
     profile_counts = {p["label"]: p.get("item_count", 0) for p in profile_results}
     ai_readiness = compute_ai_readiness(issues, dead_candidates, forbidden_references)
     return {
@@ -1057,6 +1170,7 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
     guide_contract_issues = validate_guide_contracts(repo_root, repo_map) if repo_map else []
     hotkey_counts = scan_hotkey_counts(hotkeys_dir, repo_root)
     unclosed_hotif = scan_unclosed_hotif(hotkeys_dir, repo_root)
+    local_only_contract_issues = validate_local_only_contract(repo_root, repo_map) if repo_map else []
 
     summary = build_summary(
         include_missing,
@@ -1066,6 +1180,7 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
         repo_map_contract_issues + guide_contract_issues,
         catalog_review_issues,
         governance_issues,
+        local_only_contract_issues,
         dead_candidates,
         profile_results,
         registry,
@@ -1087,6 +1202,7 @@ def run(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]:
             "guide_contracts": repo_map_contract_issues + guide_contract_issues,
             "catalog_review": catalog_review_issues,
             "governance": governance_issues,
+            "local_only_contract": local_only_contract_issues,
             "unclosed_hotif": unclosed_hotif,
             "forbidden_references": forbidden_references,
         },

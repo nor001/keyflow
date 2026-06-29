@@ -55,7 +55,7 @@
       "ai/repo-map.json",
       "ai/health-check.summary.json"
     ],
-    "next_frontier": "Execute ai/current-plan.md to normalize the runtime-local artifact contract and teach health_check.py to enforce it."
+    "next_frontier": "No active frontier. Next technical plan deferred until a real frontier appears. Replace ai/current-plan.md when a new technical frontier is identified."
   },
   "issues": {
     "include_missing": [],
@@ -65,6 +65,7 @@
     "guide_contracts": [],
     "catalog_review": [],
     "governance": [],
+    "local_only_contract": [],
     "unclosed_hotif": [],
     "forbidden_references": []
   },

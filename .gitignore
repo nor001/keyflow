@@ -1,7 +1,7 @@
 # AI health-check snapshots are versioned canonical artifacts.
 ahk_out.txt
+__pycache__/
 *data/hotkey-usage.json
-*data/hotkey-usage.example.json
 *data/local-secrets.ini
 *data/local-paths.ini
 *data/local-startup.ini

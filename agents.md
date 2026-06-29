@@ -19,19 +19,29 @@ Roles are fixed:
 - `README.md`: architecture and onboarding
 - `ai/governance.json`: machine-readable governance contract
 
+## Repo identity
+
+This repository is permanently operated as a multi-agent AI-first repo.
+
+- Do not rewrite the guide layer as if only one AI will touch the repo.
+- Do not remove multi-agent language just because the current task looks single-agent.
+- If a guide edit weakens handoff clarity for the next agent, treat that as governance drift and fix it in the same cycle.
+
 ## Mandatory workflow
 
 1. Read `ai/repo-map.json`.
 2. Run `python ai/health_check.py --pretty --summary`.
-3. Reconcile any status claim against:
+3. If you are reviewing another agent's execution or closing a major cycle, run `python ai/review_check.py --pretty --summary`.
+4. Reconcile any status claim against:
    - `platforms/windows/keyflow.ahk`
    - `platforms/windows/library/bootstrap.ahk`
    - `ai/health-check.summary.json`
-4. Edit the smallest responsible file set.
-5. Run `python ai/health_check.py --pretty --output ai/health-check.json --output-summary ai/health-check.summary.json`.
-6. If runtime wiring changed, smoke-test with `platforms/windows/tools/exe/AutoHotkey64.exe /ErrorStdOut=CP65001 platforms/windows/keyflow.ahk`.
-7. Close the cycle by updating the guide layer if routing, behavior, constraints, or next frontier changed.
-8. In the final handoff, state which actions are still human-only and whether a new technical plan should be created now or deferred.
+5. Edit the smallest responsible file set.
+6. Run `python ai/health_check.py --pretty --output ai/health-check.json --output-summary ai/health-check.summary.json`.
+7. If runtime wiring changed, smoke-test with `platforms/windows/tools/exe/AutoHotkey64.exe /ErrorStdOut=CP65001 platforms/windows/keyflow.ahk`.
+8. If you changed guides, plan state, or cycle status, rerun `python ai/review_check.py --pretty --summary`.
+9. Close the cycle by updating the guide layer if routing, behavior, constraints, or next frontier changed.
+10. In the final handoff, state which actions are still human-only and whether a new technical plan should be created now or deferred.
 
 If step 2 or 5 returns `ok: false`, fix the reported issues before doing anything else.
 
@@ -60,6 +70,7 @@ Handoff rule:
 - If technical execution is complete, say so explicitly and separate human-only pending work from technical pending work.
 - If a next technical frontier is already clear, replace `ai/current-plan.md` with the new plan in the same cycle.
 - If only human-only work remains, do not invent a new technical plan just to fill the file; say that plan creation is deferred until a real technical frontier appears.
+- Never collapse the repo narrative into a single-agent workflow. Preserve explicit multi-agent handoff wording even when the repo is temporarily stable.
 
 ## Plan policy
 
@@ -73,7 +84,7 @@ Use only one persistent plan location at a time.
 
 ## Hard rules
 
-- Never touch local-only files unless the user explicitly asks: `local-secrets.ini`, `local-paths.ini`, `local-startup.ini`, `memory-vars.ini`, `rom.ini`, `storage.db`.
+- Never touch local-only files unless the user explicitly asks: `local-secrets.ini`, `local-paths.ini`, `local-startup.ini`, `memory-vars.ini`, `rom.ini`, `storage.db`, `hotkey-usage.json`.
 - Never reintroduce retired env fallbacks, retired workspace names, or references to removed guide paths.
 - Never merge `sap-session.ahk` into `sap.ahk` or vice versa.
 - Never guess machine paths; use `*.example.*` only as shape references.
@@ -120,12 +131,14 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 - `LauncherService` and `WindowGroupService` now use clearer intent/state naming; historical internal state fields were removed.
 - Catalog counts are stable and the current catalog-review entries are marked `verified`.
 - Catalog review contract lives in `ai/catalog-review.json`, and governance rules are now also represented in `ai/governance.json`.
-- A detailed multi-agent plan is currently active at `ai/current-plan.md`.
+- The runtime-local artifact contract is now fully normalized: `hotkey-usage.json` is consistently classified across `.gitignore`, `AGENTS.md`, `README.md`, `ai/repo-map.json`, and `ai/health_check.py`.
+- `ai/health_check.py` now enforces runtime-local boundary consistency via `validate_local_only_contract()`.
+- `ai/review_check.py` is the reviewer-oriented audit for cycle closure, guide alignment, and multi-agent handoff quality.
 
 ## Next evolution frontier
 
-- Execute `ai/current-plan.md`: normalize the runtime-local artifact contract.
-- Start with `hotkey-usage.json` alignment across `.gitignore`, guides, and `ai/health_check.py`.
+- Execute `ai/current-plan.md`: harden the multi-agent governance contract so another AI cannot silently weaken the repo's AI-first handoff model.
+- Start with machine-validation of mandatory multi-agent language in `AGENTS.md`, `ai/governance.json`, and `ai/repo-map.json`.
 
 ## Validation
 
