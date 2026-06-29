@@ -162,6 +162,7 @@
     "startup-vmware"
   ],
   "local-only-files": [
+    "platforms/windows/data/hotkey-usage.json",
     "platforms/windows/data/local-secrets.ini",
     "platforms/windows/data/local-paths.ini",
     "platforms/windows/data/local-startup.ini",
@@ -173,6 +174,6 @@
   "standalone": [
     "platforms/windows/hotkeys/layouts/colemak-dh.ahk"
   ],
-  "current-focus": "Stable multi-agent guide layer with simplified runtime APIs, verified active catalog review state, and machine-visible governance contracts.",
-  "next-frontier": "AI governance hardening is complete for this cycle. Open the next technical plan only when a real runtime, contract, or workflow hotspot appears."
+  "current-focus": "Stable multi-agent guide layer with verified catalog review state and machine-visible governance, with the remaining technical drift concentrated in runtime-local artifact classification.",
+  "next-frontier": "Execute ai/current-plan.md to normalize the runtime-local artifact contract and teach health_check.py to enforce it."
 }

@@ -1,80 +1,71 @@
-# AI Governance Hardening Plan
+# Runtime-Local Contract Enforcement Plan
 
 ## Intent
 
-Strengthen the repo's AI-first governance so multi-agent work depends less on prose memory and more on machine-visible contracts.
+Clean up the remaining drift between versioned repo contracts and runtime-local artifacts so new agents can trust which files are active, versioned, and local-only without guessing.
 
-This replaces the prior catalog-governance plan, whose human-review contract is already in place and whose catalog entries have now been marked as verified.
+This plan is based on concrete repo evidence:
+
+- `platforms/windows/data/hotkey-usage.json` is treated as runtime-local by `.gitignore`, `README.md`, and `constants-core.ahk`, but it was not consistently represented across every AI contract.
+- `platforms/windows/data/memory-vars.ini` is runtime-local in both `.gitignore` and runtime constants, so it belongs in the same explicit contract check as the other local-only artifacts.
+- Local/runtime boundary rules are close, but not yet fully normalized across guide files, health checks, and data layout.
 
 ## Success criteria
 
-- Repo governance rules are represented by a small machine-readable artifact under `ai/`.
-- `health_check.py` validates governance drift, not just runtime drift.
-- Human-owned contract files and guide authority stay aligned without requiring chat history.
-- If a human-owned contract changes state, the guide layer reflects that state in the same cycle.
+- Every runtime-local artifact is consistently classified across `.gitignore`, `AGENTS.md`, `README.md`, `ai/repo-map.json`, and `ai/health_check.py`.
+- A new agent can infer which JSON/INI files are active runtime inputs versus leftover inventory without guessing.
 
 ## Workstreams
 
-### 1. Add a machine-readable governance contract
+### 1. Normalize runtime-local contract
 
-- Create one compact artifact under `ai/` that declares:
-  - guide authority
-  - required cycle outputs
-  - detailed plan location
-  - human-owned contracts
-  - machine-validated contracts
-- Keep the file small and boring.
-
-Definition of done:
-
-- Another agent can discover repo governance structure from repo files alone.
-
-Status:
-
-- Completed in this cycle with `ai/governance.json`.
-
-### 2. Validate governance drift automatically
-
-- Extend `ai/health_check.py` so it validates the governance contract against:
-  - actual guide files
-  - actual plan location
-  - actual human-owned contract files
-- Detect stale catalog-review wording when a catalog is marked `verified`.
+- Align the treatment of:
+  - `platforms/windows/data/hotkey-usage.json`
+  - `platforms/windows/data/memory-vars.ini`
+  - `storage.db`
+  - other runtime-local files already covered by `.gitignore`
+- Update machine-readable and prose guidance so the same file is never local-only in one place and omitted in another.
 
 Definition of done:
 
-- Governance drift becomes machine-visible before another agent builds on stale assumptions.
+- Runtime-local file lists are consistent across repo contracts.
 
-Status:
+### 2. Strengthen health-check coverage for boundary drift
 
-- Completed in this cycle through `health_check.py` validation of governance contract shape, referenced files, repo-map read order, and stale verified catalog notes.
-
-### 3. Reconcile human review with guide state
-
-- If catalog review is already marked verified, remove stale wording that still says review is pending.
-- Keep `AGENTS.md`, `README.md`, and `ai/repo-map.json` aligned with the verified state.
+- Extend `ai/health_check.py` so it can detect:
+  - runtime-local files mentioned in some guide layers but missing from others
+- Keep the checks cheap and deterministic.
 
 Definition of done:
 
-- Human state and guide state no longer contradict each other.
+- Boundary drift becomes machine-visible before another cleanup cycle starts.
 
-Status:
+### 3. Reconcile governance after cleanup
 
-- Completed in this cycle by normalizing `ai/catalog-review.json` and aligning the guide layer with verified catalog state.
+- Update:
+  - `AGENTS.md`
+  - `README.md`
+  - `ai/repo-map.json`
+  - `ai/governance.json`
+  - `ai/catalog-review.json` if affected
+- Leave one clear answer for each artifact: active versioned, active local-only, or intentionally inactive.
+
+Definition of done:
+
+- Another agent can resume with no ambiguity about data ownership and runtime scope.
 
 ## Ordered execution
 
-1. Add `ai/governance.json`.
-2. Validate it from `health_check.py`.
-3. Normalize verified catalog-review notes and guide wording.
-4. Regenerate `ai/health-check.summary.json`.
+1. Align the runtime-local contract first.
+2. Teach `health_check.py` to guard the boundary.
+3. Regenerate the guide layer and summary artifacts.
 
 ## Explicit non-goals for this cycle
 
-- Do not reopen runtime simplification work without new evidence.
-- Do not split the repo into parallel `ai/` and `human/` trees.
-- Do not create more persistent plan files.
+- Do not reopen broad runtime API refactors.
+- Do not create a general `human/` folder.
+- Do not change active SAP session/login behavior.
 
 ## Current active frontier
 
-AI governance hardening is complete for this cycle. There is no active technical frontier right now; open the next plan only when a real runtime, contract, or workflow hotspot appears.
+The next best move is to normalize the runtime-local contract, starting with `hotkey-usage.json` alignment across `.gitignore`, guides, and `ai/health_check.py`.

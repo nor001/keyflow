@@ -54,5 +54,5 @@
     "ai/repo-map.json",
     "ai/health-check.summary.json"
   ],
-  "next_frontier": "AI governance hardening is complete for this cycle. Open the next technical plan only when a real runtime, contract, or workflow hotspot appears."
+  "next_frontier": "Execute ai/current-plan.md to normalize the runtime-local artifact contract and teach health_check.py to enforce it."
 }

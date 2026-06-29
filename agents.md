@@ -124,8 +124,8 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 
 ## Next evolution frontier
 
-- AI governance hardening is complete for this cycle.
-- There is no active technical frontier right now; create the next `ai/current-plan.md` only when a real runtime, contract, or workflow hotspot appears.
+- Execute `ai/current-plan.md`: normalize the runtime-local artifact contract.
+- Start with `hotkey-usage.json` alignment across `.gitignore`, guides, and `ai/health_check.py`.
 
 ## Validation
 
