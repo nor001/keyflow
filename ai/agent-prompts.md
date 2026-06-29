@@ -1,6 +1,6 @@
 # Agent prompts
 
-Strong reusable prompts for multi-agent work in `keyflow` and similar AI-first repos.
+Strong reusable prompts for dual-role work in `keyflow` and similar AI-first repos.
 
 ## Short instruction
 
@@ -8,11 +8,11 @@ Strong reusable prompts for multi-agent work in `keyflow` and similar AI-first r
 
 ## Execute current repo
 
-`Read AGENTS.md first and treat it as the operational contract. This repo is permanently multi-agent and AI-first, so do not weaken handoff language, remove multi-agent guidance, or rewrite the guide layer as if only one AI will touch it. Run python ai/health_check.py --pretty --summary before changes and follow the mandatory workflow in AGENTS.md exactly. Respect ai/governance.json, human-owned contracts, and ai/current-plan.md when a frontier is active. After changes, regenerate the health-check artifacts, run python ai/review_check.py --pretty --summary when reviewing or closing a cycle, and update the guide layer if behavior, routing, governance, or next frontier changed.`
+`Read AGENTS.md first and treat it as the operational contract. This repo is permanently dual-role and AI-first: architect selects or reviews the frontier, executor implements and validates it, and one AI may perform both roles when appropriate. Run python ai/health_check.py --pretty --summary before changes and follow the mandatory workflow in AGENTS.md exactly. Respect ai/governance.json, human-owned contracts, and ai/current-plan.md when a frontier is active. After changes, regenerate the health-check artifacts, run python ai/review_check.py --pretty --summary when reviewing or closing a cycle, and update the guide layer if behavior, routing, governance, or next frontier changed.`
 
 ## Review current repo
 
-`Read AGENTS.md first, then run python ai/health_check.py --pretty --summary and python ai/review_check.py --pretty --summary. Review the repo as a multi-agent handoff surface, not only as runtime code. Validate that AGENTS.md, README.md, ai/repo-map.json, ai/governance.json, ai/current-plan.md, and ai/health-check.summary.json all agree on the current model and frontier before proposing or making changes.`
+`Read AGENTS.md first, then run python ai/health_check.py --pretty --summary and python ai/review_check.py --pretty --summary. Review the repo as an architect/executor handoff surface, not only as runtime code. Validate that AGENTS.md, README.md, ai/repo-map.json, ai/governance.json, ai/current-plan.md, and ai/health-check.summary.json all agree on the current model and frontier before proposing or making changes.`
 
 ## Architect current repo
 
@@ -24,11 +24,11 @@ Strong reusable prompts for multi-agent work in `keyflow` and similar AI-first r
 
 ## Bootstrap a new AI-first repo
 
-`Create an AI-first maintenance layer for this repo. I want AGENTS.md for workflow and rules, README.md for architecture and onboarding, and an ai/ layer with repo-map.json, health_check.py, review_check.py, health-check.summary.json, current-plan.md, governance.json, and any minimal machine-readable contracts needed for multi-agent continuity.`
+`Create an AI-first maintenance layer for this repo. I want AGENTS.md for workflow and rules, README.md for architecture and onboarding, and an ai/ layer with repo-map.json, health_check.py, review_check.py, health-check.summary.json, current-plan.md, governance.json, and any minimal machine-readable contracts needed for architect/executor continuity.`
 
 ## Rebuild the guide layer
 
-`Rebuild the AI operating guide for this repo. Separate AGENTS.md as operational, README.md as architectural, and ai/ as machine-readable state, governance, navigation, validation, and reviewer tooling. Remove duplicated guidance, preserve explicit multi-agent handoff language, align human-owned contracts, and leave one clear frontier.`
+`Rebuild the AI operating guide for this repo. Separate AGENTS.md as operational, README.md as architectural, and ai/ as machine-readable state, governance, navigation, validation, and reviewer tooling. Remove duplicated guidance, preserve explicit architect/executor handoff language, align human-owned contracts, and leave one clear frontier.`
 
 ## Open a new technical plan
 

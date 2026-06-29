@@ -1,6 +1,6 @@
 {
   "version": 6,
-  "purpose": "Navigation map for rapid multi-agent maintenance of keyflow.",
+  "purpose": "Navigation map for rapid dual-role AI maintenance of keyflow.",
   "guide-files": {
     "summary": "ai/health-check.summary.json",
     "map": "ai/repo-map.json",
@@ -186,6 +186,6 @@
   "standalone": [
     "platforms/windows/hotkeys/layouts/colemak-dh.ahk"
   ],
-  "current-focus": "Stable AI-first runtime, normalized local-only contract, machine-enforced multi-agent governance, optional architect/executor role split, and runtime execution observability via ai/run_smoke.py and ai/run-result.json.",
+  "current-focus": "Stable AI-first runtime, normalized local-only contract, machine-enforced role governance, architect/executor handoff, and runtime execution observability via ai/run_smoke.py and ai/run-result.json.",
   "next-frontier": "No active frontier. Next technical plan deferred until a real frontier appears. Replace ai/current-plan.md when a new technical frontier is identified."
 }

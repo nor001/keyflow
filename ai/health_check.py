@@ -73,15 +73,15 @@ KNOWN_DEAD_CONSTANTS: tuple[str, ...] = ()
 CATALOG_REVIEW_FILE = "ai/catalog-review.json"
 CATALOG_REVIEW_STATUS_VALUES = {"pending_human_review", "verified"}
 GOVERNANCE_FILE = "ai/governance.json"
-REQUIRED_AGENTS_SECTIONS = (
+REQUIRED_ROLE_SECTIONS = (
     "## Repo identity",
-    "## Multi-agent rules",
+    "## Role rules",
     "## Next evolution frontier",
 )
-REQUIRED_AGENTS_PHRASES = (
-    "This repository is permanently operated as a multi-agent AI-first repo.",
-    "This repo is shared by multiple AIs.",
-    "Write for the next agent, not for your own memory.",
+REQUIRED_ROLE_PHRASES = (
+    "This repository is permanently operated as a dual-role AI-first repo.",
+    "The two supported roles are architect and executor.",
+    "Write for the next handoff, not for your own memory.",
 )
 REQUIRED_CURRENT_MODEL_PHRASES = (
     "validate_local_only_contract()",
@@ -570,30 +570,30 @@ def validate_governance_contract(
             }
         )
 
-    if payload.get("multi_agent_repo") is not True:
+    if payload.get("dual_role_repo") is not True:
         issues.append(
             {
-                "type": "governance_multi_agent_missing",
+                "type": "governance_dual_role_missing",
                 "file": GOVERNANCE_FILE,
-                "message": "governance.json must declare multi_agent_repo=true.",
+                "message": "governance.json must declare dual_role_repo=true.",
             }
         )
 
-    if payload.get("required_agents_sections") != list(REQUIRED_AGENTS_SECTIONS):
+    if payload.get("required_role_sections") != list(REQUIRED_ROLE_SECTIONS):
         issues.append(
             {
-                "type": "governance_agents_sections_mismatch",
+                "type": "governance_role_sections_mismatch",
                 "file": GOVERNANCE_FILE,
-                "message": "governance.json required_agents_sections do not match the enforced multi-agent contract.",
+                "message": "governance.json required_role_sections do not match the enforced role contract.",
             }
         )
 
-    if payload.get("required_agents_phrases") != list(REQUIRED_AGENTS_PHRASES):
+    if payload.get("required_role_phrases") != list(REQUIRED_ROLE_PHRASES):
         issues.append(
             {
-                "type": "governance_agents_phrases_mismatch",
+                "type": "governance_role_phrases_mismatch",
                 "file": GOVERNANCE_FILE,
-                "message": "governance.json required_agents_phrases do not match the enforced multi-agent contract.",
+                "message": "governance.json required_role_phrases do not match the enforced role contract.",
             }
         )
 
@@ -650,7 +650,7 @@ def validate_repo_map_contracts(
             {
                 "type": "repo_map_guide_files_mismatch",
                 "file": "ai/repo-map.json",
-                "message": "guide-files in repo-map.json do not match the standard multi-agent guide contract.",
+                "message": "guide-files in repo-map.json do not match the standard AI guide contract.",
             }
         )
 
@@ -783,31 +783,31 @@ def validate_guide_contracts(
             {
                 "type": "agents_guide_authority_missing",
                 "file": "AGENTS.md",
-                "message": "AGENTS.md must declare guide authority for multi-agent handoff.",
+                "message": "AGENTS.md must declare guide authority for role handoff.",
             }
         )
 
     # Use governance.json as the single source of truth for required sections/phrases;
     # fall back to module-level constants only if governance data is unavailable.
-    gov_sections = governance.get("required_agents_sections") or list(REQUIRED_AGENTS_SECTIONS)
+    gov_sections = governance.get("required_role_sections") or list(REQUIRED_ROLE_SECTIONS)
     for section in gov_sections:
         if section not in agents_text:
             issues.append(
                 {
                     "type": "agents_required_section_missing",
                     "file": "AGENTS.md",
-                    "message": f"AGENTS.md is missing required multi-agent section: {section}",
+                    "message": f"AGENTS.md is missing required role section: {section}",
                 }
             )
 
-    gov_phrases = governance.get("required_agents_phrases") or list(REQUIRED_AGENTS_PHRASES)
+    gov_phrases = governance.get("required_role_phrases") or list(REQUIRED_ROLE_PHRASES)
     for phrase in gov_phrases:
         if phrase not in agents_text:
             issues.append(
                 {
                     "type": "agents_required_phrase_missing",
                     "file": "AGENTS.md",
-                    "message": f"AGENTS.md is missing required multi-agent contract phrase: {phrase}",
+                    "message": f"AGENTS.md is missing required role contract phrase: {phrase}",
                 }
             )
 
@@ -820,12 +820,12 @@ def validate_guide_contracts(
             }
         )
 
-    if "multi-agent" not in readme_text.lower():
+    if "architect" not in readme_text.lower() or "executor" not in readme_text.lower():
         issues.append(
             {
-                "type": "readme_multi_agent_missing",
+                "type": "readme_dual_role_missing",
                 "file": "README.md",
-                "message": "README.md must explicitly acknowledge the multi-agent operating model.",
+                "message": "README.md must explicitly acknowledge the architect/executor role model.",
             }
         )
 

@@ -5,10 +5,9 @@ Private Windows automation workspace built on AutoHotkey v2. This repo is optimi
 ## AI operating guide
 
 For operational maintenance, use `ai/health-check.summary.json`, `ai/repo-map.json`, and `AGENTS.md` before changing runtime files.
-Machine-readable governance rules also live in `ai/governance.json`.
+Machine-readable governance rules live in `ai/governance.json`.
 Reviewer pass: run `python ai/review_check.py --pretty --summary` after another AI finishes a cycle.
-This guide layer is intentionally multi-agent; do not simplify it into a single-agent workflow.
-The workflow supports either one AI completing a full cycle or a split between architect and executor roles.
+This guide layer is intentionally dual-role: architect selects or reviews the frontier, and executor implements and validates it. One AI may perform both roles when that is simpler.
 
 ## Architecture
 
@@ -89,4 +88,4 @@ The preferred startup contract lives in `local-startup.ini`:
 - The `utils` global object is gone; utility behavior lives in free `util*()` functions.
 - Launcher and window-group flows now use clearer intent-first names instead of legacy helper wording.
 - Catalog review state now lives in `ai/catalog-review.json`, and the current active catalog entries are marked `verified`.
-- AI governance contract now lives in `ai/governance.json`.
+- AI governance contract now lives in `ai/governance.json` and centers on the architect/executor role model.

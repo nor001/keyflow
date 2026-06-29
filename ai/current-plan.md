@@ -5,8 +5,8 @@ Plan: completed
 
 ## Outcome
 
-- `AGENTS.md` now states the actual governance model: `ai/health_check.py` owns the enforced baseline, `ai/governance.json` mirrors it as the machine-readable contract, and `ai/review_check.py` consumes governance for reviewer audits.
-- The optional architect/executor split is documented as a workflow aid. A single AI can still act as architect and executor when that is simpler.
+- `AGENTS.md` now states the actual governance model: `ai/health_check.py` owns the enforced baseline, `ai/governance.json` mirrors it as the machine-readable role contract, and `ai/review_check.py` consumes governance for reviewer audits.
+- The architect/executor split is documented as the repo operating model. A single AI can still act as both architect and executor when that is simpler.
 - `README.md` now includes `ai/run-result.json` in the local-only artifact list.
 - `platforms/windows/library/bootstrap.ahk` no longer references the retired `utils` global in its startup comment.
 

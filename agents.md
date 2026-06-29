@@ -1,6 +1,6 @@
 # AGENTS.md
 
-AutoHotkey v2 Windows automation workspace. Operational repo, optimized for AI maintenance by multiple agents.
+AutoHotkey v2 Windows automation workspace. Operational repo, optimized for AI maintenance through two roles: architect and executor.
 
 ## Guide authority
 
@@ -21,11 +21,11 @@ Roles are fixed:
 
 ## Repo identity
 
-This repository is permanently operated as a multi-agent AI-first repo.
+This repository is permanently operated as a dual-role AI-first repo.
 
-- Do not rewrite the guide layer as if only one AI will touch the repo.
-- Do not remove multi-agent language just because the current task looks single-agent.
-- If a guide edit weakens handoff clarity for the next agent, treat that as governance drift and fix it in the same cycle.
+- The two supported roles are architect and executor.
+- A single AI may perform both roles when the task is small, clear, or already covered by `ai/current-plan.md`.
+- If a guide edit weakens handoff clarity between roles, treat that as governance drift and fix it in the same cycle.
 
 ## Mandatory workflow
 
@@ -45,15 +45,15 @@ This repository is permanently operated as a multi-agent AI-first repo.
 
 If step 2 or 5 returns `ok: false`, fix the reported issues before doing anything else.
 
-## Multi-agent rules
+## Role rules
 
-This repo is shared by multiple AIs. Write for the next agent, not for your own memory.
+Write for the next handoff, not for your own memory.
 
 Agent role model:
 
-- A single AI may act as both architect and executor when the task is small, clear, or already covered by `ai/current-plan.md`.
-- If two AIs collaborate, the architect role owns frontier selection, governance alignment, and review criteria; the executor role owns scoped implementation, validation, and handoff updates.
-- Role split is optional. The invariant is not "two AIs must participate"; the invariant is that every cycle leaves enough guide and machine-readable state for any next AI to continue safely.
+- The architect role owns frontier selection, governance alignment, architectural review, and success criteria.
+- The executor role owns scoped implementation, validation, generated artifacts, and final handoff.
+- Role split is optional. The invariant is that every cycle leaves enough guide and machine-readable state for either role to continue safely.
 
 Claim discipline:
 
@@ -72,11 +72,11 @@ Guide discipline:
 
 Handoff rule:
 
-- Leave the repo so another agent can resume safely from code plus guide files only.
+- Leave the repo so either role can resume safely from code plus guide files only.
 - If technical execution is complete, say so explicitly and separate human-only pending work from technical pending work.
 - If a next technical frontier is already clear, replace `ai/current-plan.md` with the new plan in the same cycle.
 - If only human-only work remains, do not invent a new technical plan just to fill the file; say that plan creation is deferred until a real technical frontier appears.
-- Never collapse the repo narrative into a single-agent workflow. Preserve explicit multi-agent handoff wording even when the repo is temporarily stable.
+- Never collapse the repo narrative into an unstructured single-role workflow. Preserve explicit architect/executor handoff wording even when the repo is temporarily stable.
 
 ## Plan policy
 
@@ -139,10 +139,10 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 - Catalog review contract lives in `ai/catalog-review.json`, and governance rules are now also represented in `ai/governance.json`.
 - The runtime-local artifact contract is now fully normalized: `hotkey-usage.json` is consistently classified across `.gitignore`, `AGENTS.md`, `README.md`, `ai/repo-map.json`, and `ai/health_check.py`.
 - `ai/health_check.py` now enforces runtime-local boundary consistency via `validate_local_only_contract()`.
-- `ai/health_check.py` and `ai/review_check.py` now make multi-agent governance drift machine-visible by enforcing required guide sections, phrases, frontier state, and reviewer handoff commands.
-- `ai/review_check.py` is the reviewer-oriented audit for cycle closure, guide alignment, and multi-agent handoff quality.
+- `ai/health_check.py` and `ai/review_check.py` now make role-governance drift machine-visible by enforcing required guide sections, phrases, frontier state, and reviewer handoff commands.
+- `ai/review_check.py` is the reviewer-oriented audit for cycle closure, guide alignment, and architect/executor handoff quality.
 - `ai/review_check.py` now distinguishes stale generated artifacts (`stale_summary` with regeneration command) from real contract failures, eliminating reviewer false positives caused by un-regenerated summaries.
-- `ai/health_check.py` owns the enforced baseline for required multi-agent sections and phrases; `ai/governance.json` mirrors that baseline as the machine-readable contract and must match it.
+- `ai/health_check.py` owns the enforced baseline for required role sections and phrases; `ai/governance.json` mirrors that baseline as the machine-readable contract and must match it.
 - `ai/review_check.py` reads required phrases from `ai/governance.json` for reviewer audits, using fallback constants only if governance is unavailable or malformed.
 - `ai/governance.json` now declares `required_current_model_phrases`; `ai/review_check.py` reads this list for reviewer audits, and `ai/health_check.py` validates the governance value against `REQUIRED_CURRENT_MODEL_PHRASES`.
 - `ai/agent-prompts.md` is now included in `ai/repo-map.json` `read-order`, making it visible to agents on first read.
@@ -150,8 +150,8 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 
 ## Next evolution frontier
 
-- Guide and governance alignment plan is complete. `health_check.py` is the enforced baseline, `ai/governance.json` mirrors that contract, and `review_check.py` consumes governance for reviewer audits.
-- Optional architect/executor role split is documented as a workflow aid, not a requirement; one AI can still complete a full cycle when appropriate.
+- Guide and governance alignment plan is complete. `health_check.py` is the enforced baseline, `ai/governance.json` mirrors that role contract, and `review_check.py` consumes governance for reviewer audits.
+- Architect/executor roles are documented as the repo operating model; one AI can still complete a full cycle by explicitly carrying both roles when appropriate.
 - Next technical plan: deferred. No new technical frontier is identified at this time. Replace `ai/current-plan.md` when a real frontier appears.
 
 ## Validation

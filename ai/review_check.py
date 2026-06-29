@@ -19,10 +19,10 @@ REGENERATE_COMMAND = (
 )
 
 # Fallback phrases used only when governance.json is unavailable or malformed.
-_FALLBACK_AGENTS_PHRASES = (
-    "This repository is permanently operated as a multi-agent AI-first repo.",
-    "This repo is shared by multiple AIs.",
-    "Write for the next agent, not for your own memory.",
+_FALLBACK_ROLE_PHRASES = (
+    "This repository is permanently operated as a dual-role AI-first repo.",
+    "The two supported roles are architect and executor.",
+    "Write for the next handoff, not for your own memory.",
 )
 
 # Fallback current-model phrases used only when governance.json is unavailable or malformed.
@@ -92,8 +92,8 @@ def build_review(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]
     plan_text = read_text(current_plan_path)
     gitignore_text = read_text(gitignore_path)
 
-    # Load multi-agent contract requirements from governance (single source of truth).
-    required_agents_phrases: list[str] = governance.get("required_agents_phrases") or list(_FALLBACK_AGENTS_PHRASES)
+    # Load role contract requirements from governance.
+    required_role_phrases: list[str] = governance.get("required_role_phrases") or list(_FALLBACK_ROLE_PHRASES)
     required_current_model_phrases: list[str] = governance.get("required_current_model_phrases") or list(_FALLBACK_CURRENT_MODEL_PHRASES)
 
     agents_frontier = find_section(agents_text, "Next evolution frontier")
@@ -190,36 +190,36 @@ def build_review(repo_root: Path) -> tuple[dict[str, object], dict[str, object]]
             }
         )
 
-    multi_agent_governance = governance.get("multi_agent_repo") is True
-    add_check("governance-multi-agent", multi_agent_governance, "governance declares the repo as multi-agent")
-    if not multi_agent_governance:
+    dual_role_governance = governance.get("dual_role_repo") is True
+    add_check("governance-dual-role", dual_role_governance, "governance declares the repo as dual-role")
+    if not dual_role_governance:
         issues.append(
             {
-                "type": "governance_multi_agent_missing",
+                "type": "governance_dual_role_missing",
                 "file": "ai/governance.json",
-                "message": "governance.json must declare multi_agent_repo=true.",
+                "message": "governance.json must declare dual_role_repo=true.",
             }
         )
 
-    agents_multi_agent_heading = "## Multi-agent rules" in agents_text
-    add_check("agents-multi-agent-heading", agents_multi_agent_heading, "AGENTS contains the Multi-agent rules section")
-    if not agents_multi_agent_heading:
+    agents_role_heading = "## Role rules" in agents_text
+    add_check("agents-role-heading", agents_role_heading, "AGENTS contains the Role rules section")
+    if not agents_role_heading:
         issues.append(
             {
-                "type": "agents_multi_agent_heading_missing",
+                "type": "agents_role_heading_missing",
                 "file": "AGENTS.md",
-                "message": "AGENTS.md must preserve the Multi-agent rules section.",
+                "message": "AGENTS.md must preserve the Role rules section.",
             }
         )
 
-    missing_phrases = [phrase for phrase in required_agents_phrases if phrase not in agents_text]
-    add_check("agents-multi-agent-phrases", len(missing_phrases) == 0, "AGENTS preserves mandatory multi-agent contract phrases")
+    missing_phrases = [phrase for phrase in required_role_phrases if phrase not in agents_text]
+    add_check("agents-role-phrases", len(missing_phrases) == 0, "AGENTS preserves mandatory role contract phrases")
     for phrase in missing_phrases:
         issues.append(
             {
-                "type": "agents_multi_agent_phrase_missing",
+                "type": "agents_role_phrase_missing",
                 "file": "AGENTS.md",
-                "message": f"AGENTS.md is missing required multi-agent phrase: {phrase}",
+                "message": f"AGENTS.md is missing required role phrase: {phrase}",
             }
         )
 
