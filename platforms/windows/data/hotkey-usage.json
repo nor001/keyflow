@@ -15,9 +15,9 @@
       "sourceGroup": "global"
     },
     "#esc": {
-      "count": 2,
+      "count": 3,
       "firstSeenUtc": "20260628031554",
-      "lastSeenUtc": "20260629145015",
+      "lastSeenUtc": "20260629231340",
       "sourceFile": "hotkeys\/global.ahk",
       "sourceGroup": "global"
     },
@@ -50,29 +50,29 @@
       "sourceGroup": "sap-eclipse"
     },
     "f5": {
-      "count": 8,
+      "count": 12,
       "firstSeenUtc": "20260626163737",
-      "lastSeenUtc": "20260628030810",
+      "lastSeenUtc": "20260630000831",
       "sourceFile": "hotkeys\/domains.ahk",
       "sourceGroup": "xyplorer"
     },
     "~\\": {
-      "count": 2,
+      "count": 3,
       "firstSeenUtc": "20260626163556",
-      "lastSeenUtc": "20260626193116",
+      "lastSeenUtc": "20260629185419",
       "sourceFile": "hotkeys\/global.ahk",
       "sourceGroup": "global"
     },
     "~^c": {
-      "count": 43,
+      "count": 51,
       "firstSeenUtc": "20260626163544",
-      "lastSeenUtc": "20260629163744",
+      "lastSeenUtc": "20260630000825",
       "sourceFile": "hotkeys\/global.ahk",
       "sourceGroup": "global"
     }
   },
   "meta": {
-    "updatedAtUtc": "20260629163744",
+    "updatedAtUtc": "20260630000831",
     "version": 1
   }
 }

@@ -150,9 +150,10 @@ Avoid mixing: `session` with old login/logon terms, `window` with desktop/gui sy
 
 ## Next evolution frontier
 
-- Guide and governance alignment plan is complete. `health_check.py` is the enforced baseline, `ai/governance.json` mirrors that role contract, and `review_check.py` consumes governance for reviewer audits.
-- Architect/executor roles are documented as the repo operating model; one AI can still complete a full cycle by explicitly carrying both roles when appropriate.
-- Next technical plan: deferred. No new technical frontier is identified at this time. Replace `ai/current-plan.md` when a real frontier appears.
+- The aggressive governance and prompt-structure evolution is complete.
+- No active frontier remains from the consolidation cycle.
+- No new technical frontier is currently evident, so planning is deferred until a real runtime, contract, or workflow hotspot appears.
+- Replace `ai/current-plan.md` in the same cycle once that next technical frontier is identified.
 
 ## Validation
 
