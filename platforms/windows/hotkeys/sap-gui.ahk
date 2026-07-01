@@ -43,10 +43,6 @@ services.sap.exitSession()
 trackSapGuiHotkeyUsage("^+k", "sap-gui-session")
 Send("^+l")
 }
-; ^`::{
-; trackSapGuiHotkeyUsage("ctrl+backtick", "sap-gui-session")
-; Send("^w")
-; }
 ^d::{
 trackSapGuiHotkeyUsage("^d", "sap-gui-session")
 services.sap.toggleDebugMode()

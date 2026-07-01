@@ -30,16 +30,6 @@ trackEditorsHotkeyUsage("^left", "excel")
 Send("!{left}")
 }
 
-#hotif winactive(titleLibreCalc)
-!right::{
-trackEditorsHotkeyUsage("!right", "libre-calc")
-Send("^pgdn")
-}
-!left::{
-trackEditorsHotkeyUsage("!left", "libre-calc")
-Send("^pgup")
-}
-
 #hotif winactive("Visual Basic")
 f5::{
 trackEditorsHotkeyUsage("f5", "visual-basic")
