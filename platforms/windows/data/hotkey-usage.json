@@ -71,9 +71,9 @@
       "sourceGroup": "sap-gui-session"
     },
     "backtick": {
-      "count": 17,
+      "count": 18,
       "firstSeenUtc": "20260626194142",
-      "lastSeenUtc": "20260701162844",
+      "lastSeenUtc": "20260701171027",
       "sourceFile": "hotkeys\/sap-eclipse.ahk",
       "sourceGroup": "sap-eclipse"
     },
@@ -106,15 +106,15 @@
       "sourceGroup": "global"
     },
     "~^c": {
-      "count": 141,
+      "count": 142,
       "firstSeenUtc": "20260626163544",
-      "lastSeenUtc": "20260701165443",
+      "lastSeenUtc": "20260701170525",
       "sourceFile": "hotkeys\/global.ahk",
       "sourceGroup": "global"
     }
   },
   "meta": {
-    "updatedAtUtc": "20260701165443",
+    "updatedAtUtc": "20260701171027",
     "version": 1
   }
 }
