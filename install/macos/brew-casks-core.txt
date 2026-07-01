@@ -23,3 +23,4 @@ alt-tab
 stats
 keepingyouawake
 stretchly
+logi-options+

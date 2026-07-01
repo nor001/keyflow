@@ -19,9 +19,6 @@ Sleep(launchDelayMs)
 
 Run(rootDir "\keyflow.ahk")
 
-if (A_Wday = 6)
-  runWeeklyCleanup(baseDrive, flowLauncherLogsDir, syncBatchFile)
-
 runPortableLink(aimpPortableLink)
 runPortableLink(dittoPortableLink)
 for linkPath in startupConfigCsvArray(portableLinksCsv)
@@ -42,33 +39,6 @@ runPortableLink(linkPath) {
     Sleep(100)
     Run(linkPath)
   }
-}
-
-runWeeklyCleanup(baseDrive, flowLauncherLogsDir, syncBatchFile) {
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps\LibreOfficePortable\Data\settings\cache")
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps\LibreOfficePortable\Data\settings\crash")
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps\LibreOfficePortable\Data\settings\temp")
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps\LibreOfficePortable\Data\settings\updates")
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps\Notepad++Portable\Data\Config\backup")
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps_updauto\Snipaste\history")
-  folderDelete(flowLauncherLogsDir)
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps_updmanual\ShareX\ShareX\Backup")
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps_updmanual\ShareX\ShareX\Logs")
-  folderDelete(baseDrive "\.sync\..apps_win\PortableApps_updmanual\xyplorer_full_noinstall\Data\AutoBackup")
-  fileDeleteIfExists(baseDrive "\.sync\..apps_win\PortableApps_updauto\Snipaste\splog.txt")
-
-  if syncBatchFile && FileExist(syncBatchFile)
-    RunWait(syncBatchFile)
-}
-
-folderDelete(folderPath) {
-  if folderPath && DirExist(folderPath)
-    DirDelete(folderPath, true)
-}
-
-fileDeleteIfExists(filePath) {
-  if filePath && FileExist(filePath)
-    FileDelete(filePath)
 }
 
 readStartupValue(configFile, sectionName, keyName, defaultValue := "") {
